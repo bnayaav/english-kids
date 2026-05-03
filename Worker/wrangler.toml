@@ -17,7 +17,7 @@ bucket_name = "english-kids-videos"
 # Then paste the ID here:
 [[kv_namespaces]]
 binding = "KV"
-id = "REPLACE_WITH_YOUR_KV_ID"
+id = "5d6291e41a4748cd98a539299f130689"
 
 # Set with: wrangler secret put AUTH_TOKEN
 # (interactive prompt for password)
