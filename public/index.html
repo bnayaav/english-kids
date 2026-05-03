@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FF5C8A">
+<title>אנגלית בכיף 🌟</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Heebo:wght@400;500;700;900&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="manifest" href='data:application/manifest+json,{"name":"אנגלית בכיף","short_name":"אנגלית","start_url":".","display":"standalone","background_color":"%23FFF8EC","theme_color":"%23FF5C8A","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23FF5C8A%22/%3E%3Ctext x=%2250%22 y=%2270%22 font-size=%2260%22 text-anchor=%22middle%22%3E📚%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml"}]}'>
+
+<style>
+:root {
+  --cream: #FFF8EC;
+  --cream-2: #FFEFD3;
+  --ink: #2D1B4E;
+  --ink-soft: #5C4A7E;
+  --pink: #FF5C8A;
+  --pink-deep: #E63E70;
+  --yellow: #FFD23F;
+  --yellow-deep: #F0B619;
+  --blue: #5BA9F0;
+  --blue-deep: #3B82C4;
+  --green: #6BD96B;
+  --green-deep: #4DBC4D;
+  --orange: #FF8E3C;
+  --purple: #9B5DE5;
+  --shadow-pink: 0 8px 0 #E63E70;
+  --shadow-yellow: 0 8px 0 #F0B619;
+  --shadow-blue: 0 8px 0 #3B82C4;
+  --shadow-green: 0 8px 0 #4DBC4D;
+  --shadow-ink: 0 6px 0 #2D1B4E;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: "Heebo", system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255,210,63,.18) 0, transparent 30%),
+    radial-gradient(circle at 80% 90%, rgba(91,169,240,.16) 0, transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(255,92,138,.08) 0, transparent 60%);
+  min-height: 100vh;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image: radial-gradient(var(--ink) .8px, transparent .8px);
+  background-size: 22px 22px;
+  opacity: .04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+}
+
+h1, h2, h3 {
+  font-family: "Varela Round", system-ui, sans-serif;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+h1 { font-size: clamp(28px, 7vw, 40px); }
+h2 { font-size: clamp(22px, 5.5vw, 30px); }
+h3 { font-size: clamp(18px, 4.5vw, 22px); }
+
+.eng {
+  font-family: "Fredoka", "Varela Round", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* ========== buttons ========== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 22px;
+  font-family: "Varela Round", sans-serif;
+  font-size: 18px;
+  background: var(--pink);
+  color: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  box-shadow: var(--shadow-pink);
+  cursor: pointer;
+  transition: transform .08s, box-shadow .08s;
+  text-decoration: none;
+  min-height: 52px;
+}
+.btn:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--pink-deep); }
+.btn.yellow { background: var(--yellow); color: var(--ink); box-shadow: var(--shadow-yellow); }
+.btn.yellow:active { box-shadow: 0 2px 0 var(--yellow-deep); }
+.btn.blue { background: var(--blue); box-shadow: var(--shadow-blue); }
+.btn.blue:active { box-shadow: 0 2px 0 var(--blue-deep); }
+.btn.green { background: var(--green); color: var(--ink); box-shadow: var(--shadow-green); }
+.btn.green:active { box-shadow: 0 2px 0 var(--green-deep); }
+.btn.ghost { background: #fff; color: var(--ink); box-shadow: var(--shadow-ink); }
+.btn.ghost:active { box-shadow: 0 2px 0 var(--ink); }
+.btn.lg { padding: 18px 28px; font-size: 22px; min-height: 64px; }
+.btn.sm { padding: 8px 14px; font-size: 14px; min-height: 36px; box-shadow: 0 4px 0 var(--ink); }
+.btn.sm:active { box-shadow: 0 1px 0 var(--ink); transform: translateY(3px); }
+.btn.full { width: 100%; }
+
+/* ========== cards ========== */
+.card {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: var(--shadow-ink);
+  margin-bottom: 16px;
+}
+.card.pop {
+  background: linear-gradient(180deg, #fff 60%, var(--cream-2) 100%);
+}
+
+/* ========== top bar ========== */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 8px;
+}
+.topbar .who {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  padding: 6px 14px 6px 6px;
+  box-shadow: 0 4px 0 var(--ink);
+}
+.topbar .who .av {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--yellow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  border: 2px solid var(--ink);
+}
+.topbar .stars {
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: "Varela Round", sans-serif;
+  box-shadow: 0 4px 0 var(--yellow-deep);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ========== profile selection ========== */
+.welcome {
+  text-align: center;
+  padding: 30px 10px;
+}
+.welcome .big-emoji {
+  font-size: 72px;
+  display: inline-block;
+  animation: wobble 2s ease-in-out infinite;
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 20px;
+}
+.profile-card {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 22px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .15s;
+  box-shadow: var(--shadow-ink);
+  position: relative;
+}
+.profile-card:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+.profile-card .av-big {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px;
+  border: 3px solid var(--ink);
+}
+.profile-card .name {
+  font-family: "Varela Round", sans-serif;
+  font-size: 18px;
+}
+.profile-card .stars-mini {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.profile-card.add {
+  background: var(--cream-2);
+  border-style: dashed;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 140px;
+}
+.profile-card.add .plus {
+  font-size: 42px; color: var(--ink-soft);
+  font-family: "Varela Round", sans-serif;
+}
+
+/* ========== home menu ========== */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+.menu-tile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 24px;
+  padding: 20px;
+  cursor: pointer;
+  box-shadow: var(--shadow-ink);
+  transition: transform .1s;
+  text-align: right;
+}
+.menu-tile:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+.menu-tile.t-pink { background: linear-gradient(135deg, #fff 50%, #ffd6e2 100%); }
+.menu-tile.t-blue { background: linear-gradient(135deg, #fff 50%, #cfe6fb 100%); }
+.menu-tile.t-yellow { background: linear-gradient(135deg, #fff 50%, #fff0b3 100%); }
+.menu-tile.t-green { background: linear-gradient(135deg, #fff 50%, #d6f5d6 100%); }
+.menu-tile .icon {
+  width: 64px; height: 64px;
+  border-radius: 18px;
+  background: var(--yellow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px;
+  border: 3px solid var(--ink);
+  flex-shrink: 0;
+}
+.menu-tile.t-pink .icon { background: var(--pink); }
+.menu-tile.t-blue .icon { background: var(--blue); }
+.menu-tile.t-yellow .icon { background: var(--yellow); }
+.menu-tile.t-green .icon { background: var(--green); }
+.menu-tile h3 { margin-bottom: 4px; }
+.menu-tile p { color: var(--ink-soft); font-size: 14px; }
+
+/* ========== back button ========== */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Varela Round", sans-serif;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  padding: 8px 16px;
+  box-shadow: 0 4px 0 var(--ink);
+  cursor: pointer;
+  font-size: 15px;
+  margin-bottom: 14px;
+}
+.back:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+
+/* ========== movies list ========== */
+.movie-list { display: grid; gap: 12px; }
+.movie-row {
+  display: flex; align-items: center; gap: 12px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: 0 5px 0 var(--ink);
+  cursor: pointer;
+}
+.movie-row:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--ink); }
+.movie-row .thumb {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: var(--blue);
+  border: 2px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.movie-row .meta { flex: 1; min-width: 0; }
+.movie-row .meta .title {
+  font-family: "Varela Round", sans-serif;
+  font-size: 17px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.movie-row .meta .sub {
+  font-size: 13px; color: var(--ink-soft);
+}
+.movie-row .actions { display: flex; gap: 4px; }
+
+/* ========== video player ========== */
+.video-wrap {
+  position: relative;
+  background: #000;
+  border: 3px solid var(--ink);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow-ink);
+  margin-bottom: 14px;
+}
+.video-wrap video {
+  width: 100%;
+  display: block;
+  background: #000;
+  max-height: 70vh;
+}
+
+.player-info {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 5px 0 var(--ink);
+  margin-bottom: 14px;
+}
+.player-info .pi-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; color: var(--ink-soft);
+}
+.player-info .pi-row strong { color: var(--ink); font-size: 16px; }
+
+/* ========== quiz overlay ========== */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(45, 27, 78, 0.85);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  animation: fadeIn .25s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.quiz-box {
+  background: var(--cream);
+  border: 4px solid var(--ink);
+  border-radius: 26px;
+  padding: 22px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 12px 0 var(--ink);
+  animation: pop .35s cubic-bezier(.34,1.56,.64,1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+@keyframes pop {
+  0% { transform: scale(.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.quiz-box .q-label {
+  display: inline-block;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-family: "Varela Round", sans-serif;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.quiz-box .q-word {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: clamp(36px, 9vw, 56px);
+  text-align: center;
+  color: var(--pink);
+  margin: 16px 0;
+  direction: ltr;
+  word-break: break-word;
+}
+.quiz-box .q-sentence {
+  font-family: "Fredoka", sans-serif;
+  font-size: clamp(22px, 5vw, 30px);
+  text-align: center;
+  color: var(--ink);
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  padding: 16px;
+  margin: 12px 0;
+  direction: ltr;
+}
+.quiz-box .q-prompt {
+  text-align: center;
+  font-family: "Varela Round", sans-serif;
+  font-size: 18px;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+.q-options {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.q-opt {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 16px;
+  padding: 14px;
+  font-family: "Varela Round", sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 5px 0 var(--ink);
+  transition: transform .1s, box-shadow .1s;
+}
+.q-opt:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--ink); }
+.q-opt.correct {
+  background: var(--green);
+  color: var(--ink);
+  animation: pulse-correct .5s;
+}
+.q-opt.wrong {
+  background: var(--pink);
+  color: #fff;
+  animation: shake .4s;
+}
+@keyframes pulse-correct {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.q-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.q-actions .btn { flex: 1; }
+
+.mic-btn {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--blue);
+  color: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  padding: 14px;
+  font-family: "Varela Round", sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: var(--shadow-blue);
+  margin-bottom: 10px;
+}
+.mic-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 var(--blue-deep); }
+.mic-btn.recording {
+  background: var(--pink);
+  box-shadow: var(--shadow-pink);
+  animation: rec-pulse 1s infinite;
+}
+@keyframes rec-pulse {
+  0%, 100% { box-shadow: 0 8px 0 var(--pink-deep), 0 0 0 0 rgba(255,92,138,.5); }
+  50% { box-shadow: 0 8px 0 var(--pink-deep), 0 0 0 16px rgba(255,92,138,0); }
+}
+.mic-result {
+  text-align: center;
+  font-family: "Fredoka", sans-serif;
+  font-size: 18px;
+  margin-top: 8px;
+  padding: 8px;
+  background: #fff;
+  border: 2px dashed var(--ink-soft);
+  border-radius: 12px;
+  min-height: 32px;
+  direction: ltr;
+}
+
+/* ========== form fields ========== */
+.field {
+  display: block;
+  margin-bottom: 12px;
+}
+.field label {
+  display: block;
+  font-family: "Varela Round", sans-serif;
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: "Heebo", sans-serif;
+  font-size: 16px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  color: var(--ink);
+  outline: none;
+}
+.field input:focus, .field select:focus { border-color: var(--pink); }
+.field input.eng-input, .field textarea.eng-input { direction: ltr; font-family: "Fredoka", sans-serif; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ========== vocab list ========== */
+.vocab-row {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.vocab-row .v-en {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--pink-deep);
+  flex: 1;
+  direction: ltr;
+}
+.vocab-row .v-arrow { color: var(--ink-soft); }
+.vocab-row .v-he {
+  flex: 1;
+  text-align: right;
+  font-size: 16px;
+}
+.vocab-row .v-del {
+  background: none; border: none;
+  font-size: 18px; cursor: pointer;
+  color: var(--ink-soft);
+  padding: 4px 8px;
+}
+
+/* ========== games ========== */
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* match game */
+.match-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.match-col {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.match-card {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  padding: 14px 10px;
+  cursor: pointer;
+  text-align: center;
+  font-family: "Varela Round", sans-serif;
+  font-size: 16px;
+  box-shadow: 0 4px 0 var(--ink);
+  transition: transform .1s, box-shadow .1s, background .15s;
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: center;
+}
+.match-card.eng {
+  font-family: "Fredoka", sans-serif;
+  direction: ltr;
+  background: linear-gradient(180deg, #fff, #fff5e0);
+}
+.match-card:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--ink); }
+.match-card.selected {
+  background: var(--yellow);
+  transform: scale(1.04);
+}
+.match-card.matched {
+  background: var(--green);
+  color: #fff;
+  pointer-events: none;
+  opacity: .7;
+}
+.match-card.wrong { background: var(--pink); color: #fff; animation: shake .4s; }
+
+/* listen game */
+.listen-stage {
+  text-align: center;
+  padding: 20px 0 10px;
+}
+.listen-stage .big-speak {
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  background: var(--yellow);
+  border: 4px solid var(--ink);
+  font-size: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 0 var(--yellow-deep);
+  margin-bottom: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.listen-stage .big-speak:active { transform: translateY(4px); box-shadow: 0 4px 0 var(--yellow-deep); }
+.listen-stage .hint {
+  color: var(--ink-soft);
+  font-family: "Varela Round", sans-serif;
+}
+
+/* speak game */
+.speak-stage {
+  text-align: center;
+}
+.speak-stage .target-he {
+  font-family: "Varela Round", sans-serif;
+  font-size: clamp(28px, 7vw, 40px);
+  margin: 18px 0 8px;
+  color: var(--ink);
+}
+.speak-stage .hint-en {
+  font-family: "Fredoka", sans-serif;
+  font-size: 16px;
+  color: var(--ink-soft);
+  direction: ltr;
+  margin-bottom: 14px;
+  letter-spacing: 4px;
+  filter: blur(4px);
+  transition: filter .3s;
+  cursor: pointer;
+}
+.speak-stage .hint-en.show { filter: blur(0); }
+
+/* progress bar */
+.progress-bar {
+  height: 14px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+.progress-bar .fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pink), var(--yellow));
+  width: 0;
+  transition: width .35s;
+}
+
+/* score chip */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.chip {
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: "Varela Round", sans-serif;
+  font-size: 14px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.chip.pink { background: var(--pink); color: #fff; }
+.chip.green { background: var(--green); color: var(--ink); }
+.chip.yellow { background: var(--yellow); }
+
+/* confetti */
+.confetti {
+  position: fixed; pointer-events: none;
+  z-index: 200; inset: 0;
+  overflow: hidden;
+}
+.confetti span {
+  position: absolute;
+  font-size: 22px;
+  animation: fall 1.4s linear forwards;
+}
+@keyframes fall {
+  0% { transform: translateY(-30vh) rotate(0); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* timestamps editor */
+.ts-row {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+.ts-row .ts-time {
+  font-family: "Fredoka", monospace;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 4px 6px;
+  text-align: center;
+  font-size: 14px;
+}
+.ts-row .ts-text {
+  font-size: 14px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* empty state */
+.empty {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--ink-soft);
+}
+.empty .em-emoji { font-size: 48px; margin-bottom: 10px; }
+
+/* badges row */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.stat-card {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 5px 0 var(--ink);
+}
+.stat-card .num {
+  font-family: "Varela Round", sans-serif;
+  font-size: 32px;
+  color: var(--pink);
+}
+.stat-card .lbl {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* utility */
+.row { display: flex; align-items: center; gap: 10px; }
+.row.between { justify-content: space-between; }
+.gap-sm { gap: 6px; }
+.mt { margin-top: 14px; }
+.center { text-align: center; }
+.muted { color: var(--ink-soft); }
+.hide { display: none !important; }
+
+/* avatar palette */
+.av-pick {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.av-pick .av-opt {
+  aspect-ratio: 1;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+}
+.av-pick .av-opt.sel {
+  background: var(--yellow);
+  transform: scale(1.05);
+}
+
+@media (min-width: 540px) {
+  .menu-grid { grid-template-columns: 1fr 1fr; }
+  .game-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================================
+   STATE & STORAGE
+   ========================================================================= */
+/* ============== CLOUD CONFIG (saved per-device) ============== */
+const CFG_KEY = 'eng_kids_cfg';
+
+let cfg = {
+  apiUrl: '',  // e.g. https://english-kids-api.bnayaav.workers.dev
+  token: '',
+  currentProfileId: null
+};
+
+function loadCfg() {
+  try {
+    const raw = localStorage.getItem(CFG_KEY);
+    if (raw) Object.assign(cfg, JSON.parse(raw));
+  } catch (e) {}
+}
+
+function saveCfg() {
+  try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }
+  catch (e) {}
+}
+
+let state = {
+  profiles: [],
+  vocab: [],
+  movies: [],
+  settings: { autoIntervalSec: 240, language: 'en-US' },
+  screen: { name: 'setup', params: {} }
+};
+
+/* ============== API CLIENT ============== */
+function apiUrl(path, params = {}) {
+  const u = new URL(cfg.apiUrl.replace(/\/$/, '') + path);
+  u.searchParams.set('t', cfg.token);
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null) u.searchParams.set(k, v);
+  }
+  return u.toString();
+}
+
+async function api(path, opts = {}) {
+  const url = apiUrl(path, opts.params || {});
+  const init = { ...opts };
+  delete init.params;
+  init.headers = { ...(init.headers || {}), 'X-Auth': cfg.token };
+  const resp = await fetch(url, init);
+  if (!resp.ok) {
+    let msg = 'HTTP ' + resp.status;
+    try { msg = (await resp.json()).error || msg; } catch (e) {}
+    throw new Error(msg);
+  }
+  const ct = resp.headers.get('Content-Type') || '';
+  return ct.includes('json') ? resp.json() : resp;
+}
+
+async function testConnection(apiUrlVal, tokenVal) {
+  // Test by calling /api/state with the new credentials
+  const u = new URL(apiUrlVal.replace(/\/$/, '') + '/api/state');
+  u.searchParams.set('t', tokenVal);
+  const r = await fetch(u.toString(), { headers: { 'X-Auth': tokenVal } });
+  if (r.status === 401) throw new Error('סיסמה שגויה');
+  if (!r.ok) throw new Error('שגיאת שרת: ' + r.status);
+  return r.json();
+}
+
+/* ============== STATE SAVE/LOAD via cloud ============== */
+let saveTimer = null;
+let lastSavePromise = Promise.resolve();
+
+function save() {
+  // Debounced save
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveTimer = null;
+    lastSavePromise = (async () => {
+      try {
+        await api('/api/state', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            profiles: state.profiles,
+            vocab: state.vocab,
+            movies: state.movies,
+            settings: state.settings
+          })
+        });
+      } catch (e) {
+        console.warn('save fail', e);
+        showToast('⚠️ שמירה נכשלה: ' + e.message);
+      }
+    })();
+  }, 350);
+}
+
+async function load() {
+  const data = await api('/api/state', { method: 'GET' });
+  state.profiles = data.profiles || [];
+  state.vocab = data.vocab || [];
+  state.movies = data.movies || [];
+  state.settings = data.settings || { autoIntervalSec: 240, language: 'en-US' };
+  // Seed if empty
+  if (state.vocab.length === 0) {
+    state.vocab = SEED_VOCAB.map((v, i) => ({ id: 'seed_' + i, ...v }));
+    save();
+  }
+}
+
+function showToast(msg, ms = 2800) {
+  const t = el('div', {
+    style: {
+      position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)',
+      background: '#2D1B4E', color: '#fff', padding: '12px 20px',
+      borderRadius: '999px', fontFamily: '"Varela Round"', fontSize: '14px',
+      zIndex: '500', boxShadow: '0 6px 20px rgba(0,0,0,.3)', maxWidth: '90vw',
+      animation: 'fadeIn .25s'
+    }
+  }, msg);
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), ms);
+}
+
+function fmtBytes(n) {
+  if (!n && n !== 0) return '?';
+  if (n < 1024) return n + ' B';
+  if (n < 1024 * 1024) return (n / 1024).toFixed(0) + ' KB';
+  if (n < 1024 * 1024 * 1024) return (n / (1024 * 1024)).toFixed(0) + ' MB';
+  return (n / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+}
+
+/* =========================================================================
+   SEED VOCAB - 60 starter words
+   ========================================================================= */
+const SEED_VOCAB = [
+  { en: 'cat', he: 'חתול' },
+  { en: 'dog', he: 'כלב' },
+  { en: 'bird', he: 'ציפור' },
+  { en: 'fish', he: 'דג' },
+  { en: 'water', he: 'מים' },
+  { en: 'food', he: 'אוכל' },
+  { en: 'happy', he: 'שמח' },
+  { en: 'sad', he: 'עצוב' },
+  { en: 'big', he: 'גדול' },
+  { en: 'small', he: 'קטן' },
+  { en: 'hot', he: 'חם' },
+  { en: 'cold', he: 'קר' },
+  { en: 'run', he: 'לרוץ' },
+  { en: 'jump', he: 'לקפוץ' },
+  { en: 'eat', he: 'לאכול' },
+  { en: 'drink', he: 'לשתות' },
+  { en: 'sleep', he: 'לישון' },
+  { en: 'play', he: 'לשחק' },
+  { en: 'house', he: 'בית' },
+  { en: 'car', he: 'מכונית' },
+  { en: 'book', he: 'ספר' },
+  { en: 'friend', he: 'חבר' },
+  { en: 'family', he: 'משפחה' },
+  { en: 'mother', he: 'אמא' },
+  { en: 'father', he: 'אבא' },
+  { en: 'brother', he: 'אח' },
+  { en: 'sister', he: 'אחות' },
+  { en: 'school', he: 'בית ספר' },
+  { en: 'love', he: 'אהבה' },
+  { en: 'good', he: 'טוב' },
+  { en: 'bad', he: 'רע' },
+  { en: 'new', he: 'חדש' },
+  { en: 'old', he: 'ישן' },
+  { en: 'red', he: 'אדום' },
+  { en: 'blue', he: 'כחול' },
+  { en: 'green', he: 'ירוק' },
+  { en: 'yellow', he: 'צהוב' },
+  { en: 'white', he: 'לבן' },
+  { en: 'black', he: 'שחור' },
+  { en: 'sun', he: 'שמש' },
+  { en: 'moon', he: 'ירח' },
+  { en: 'star', he: 'כוכב' },
+  { en: 'tree', he: 'עץ' },
+  { en: 'flower', he: 'פרח' },
+  { en: 'apple', he: 'תפוח' },
+  { en: 'banana', he: 'בננה' },
+  { en: 'milk', he: 'חלב' },
+  { en: 'bread', he: 'לחם' },
+  { en: 'help', he: 'עזרה' },
+  { en: 'thank you', he: 'תודה' },
+  { en: 'please', he: 'בבקשה' },
+  { en: 'hello', he: 'שלום' },
+  { en: 'bye', he: 'להתראות' },
+  { en: 'yes', he: 'כן' },
+  { en: 'no', he: 'לא' },
+  { en: 'come', he: 'בוא' },
+  { en: 'go', he: 'ללכת' },
+  { en: 'open', he: 'לפתוח' },
+  { en: 'close', he: 'לסגור' },
+  { en: 'ball', he: 'כדור' }
+];
+
+const AVATAR_OPTS = ['🦁','🐯','🐻','🐼','🦊','🐰','🐶','🐱','🐸','🐵','🦄','🐨','🐮','🐷','🐔','🦉','🦋','🐬','🐢','🐙','🦖','🐝'];
+
+/* =========================================================================
+   HELPERS
+   ========================================================================= */
+function uid() { return 'id_' + Math.random().toString(36).slice(2, 10); }
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (v !== null && v !== undefined) e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) {
+    if (k === null || k === undefined || k === false) continue;
+    if (typeof k === 'string' || typeof k === 'number') e.appendChild(document.createTextNode(k));
+    else e.appendChild(k);
+  }
+  return e;
+}
+function fmtTime(sec) {
+  sec = Math.floor(sec);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function getProfile() { return state.profiles.find(p => p.id === cfg.currentProfileId); }
+function awardStars(n) {
+  const p = getProfile();
+  if (!p) return;
+  p.stars = (p.stars || 0) + n;
+  p.stats = p.stats || { questionsAnswered: 0, correct: 0 };
+  save();
+}
+function recordAnswer(correct) {
+  const p = getProfile();
+  if (!p) return;
+  p.stats = p.stats || { questionsAnswered: 0, correct: 0 };
+  p.stats.questionsAnswered++;
+  if (correct) p.stats.correct++;
+  save();
+}
+
+function confetti() {
+  const c = el('div', { class: 'confetti' });
+  const emojis = ['🌟','✨','🎉','💫','⭐','🎊','🌈'];
+  for (let i = 0; i < 22; i++) {
+    const s = el('span', { style: { left: (Math.random() * 100) + '%', animationDelay: (Math.random() * .3) + 's', animationDuration: (1 + Math.random() * .8) + 's' } }, pick(emojis));
+    c.appendChild(s);
+  }
+  document.body.appendChild(c);
+  setTimeout(() => c.remove(), 1800);
+}
+
+/* speech */
+function speak(text, lang = 'en-US') {
+  if (!('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.9;
+    u.pitch = 1.05;
+    speechSynthesis.speak(u);
+  } catch (e) { console.warn(e); }
+}
+
+function listen(onResult, onEnd, lang = 'en-US') {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    alert('הדפדפן הזה לא תומך בדיבור. נסה Chrome.');
+    return null;
+  }
+  const r = new SR();
+  r.lang = lang;
+  r.continuous = false;
+  r.interimResults = true;
+  r.maxAlternatives = 3;
+  let finalTranscript = '';
+  r.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) finalTranscript += t;
+      else interim += t;
+    }
+    onResult(finalTranscript || interim, !!finalTranscript);
+  };
+  r.onend = () => onEnd(finalTranscript);
+  r.onerror = (e) => { console.warn('SR err', e); onEnd(finalTranscript); };
+  try { r.start(); } catch (e) { console.warn(e); }
+  return r;
+}
+
+function normalizeEn(s) {
+  return (s || '').toLowerCase().trim().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ');
+}
+
+/* =========================================================================
+   ROUTING / RENDER
+   ========================================================================= */
+const root = document.getElementById('app');
+
+function nav(name, params = {}) {
+  state.screen = { name, params };
+  render();
+  window.scrollTo(0, 0);
+}
+
+function render() {
+  root.innerHTML = '';
+  const { name, params } = state.screen;
+  const fn = SCREENS[name] || SCREENS['profile-select'];
+  root.appendChild(fn(params));
+}
+
+/* =========================================================================
+   SCREENS
+   ========================================================================= */
+const SCREENS = {};
+
+/* ---------- setup screen (cloud config) ---------- */
+SCREENS['setup'] = ({ error } = {}) => {
+  const wrap = el('div');
+  const hero = el('div', { class: 'welcome' },
+    el('div', { class: 'big-emoji' }, '☁️'),
+    el('h1', {}, 'הגדרת חיבור'),
+    el('p', { class: 'muted', style: { marginTop: '8px' } }, 'התחברות לשרת בענן')
+  );
+  wrap.appendChild(hero);
+
+  if (error) {
+    wrap.appendChild(el('div', { class: 'card', style: { background: '#FFE4E4', borderColor: '#E63E70' } },
+      el('p', {}, '⚠️ ', error)
+    ));
+  }
+
+  let urlVal = cfg.apiUrl || '';
+  let tokenVal = cfg.token || '';
+
+  const card = el('div', { class: 'card' });
+
+  card.appendChild(el('div', { class: 'field' },
+    el('label', {}, 'כתובת ה-Worker'),
+    el('input', { type: 'url', class: 'eng-input', placeholder: 'https://english-kids-api.bnayaav.workers.dev', value: urlVal, oninput: (e) => urlVal = e.target.value.trim() })
+  ));
+
+  card.appendChild(el('div', { class: 'field' },
+    el('label', {}, 'סיסמה (AUTH_TOKEN)'),
+    el('input', { type: 'password', placeholder: 'שהגדרת ב-wrangler secret', value: tokenVal, oninput: (e) => tokenVal = e.target.value })
+  ));
+
+  const status = el('p', { class: 'muted center', style: { fontSize: '13px', minHeight: '18px' } });
+  card.appendChild(status);
+
+  const connectBtn = el('button', {
+    class: 'btn green full',
+    onclick: async () => {
+      if (!urlVal || !tokenVal) { status.textContent = 'נא למלא את שני השדות'; return; }
+      connectBtn.setAttribute('disabled', 'disabled');
+      connectBtn.textContent = '🔌 מתחבר...';
+      try {
+        await testConnection(urlVal, tokenVal);
+        cfg.apiUrl = urlVal;
+        cfg.token = tokenVal;
+        saveCfg();
+        await load();
+        status.style.color = '#4DBC4D';
+        status.textContent = '✓ התחברות הצליחה!';
+        setTimeout(() => {
+          if (state.profiles.length === 0) nav('profile-edit', { id: null });
+          else nav('profile-select');
+        }, 600);
+      } catch (e) {
+        connectBtn.removeAttribute('disabled');
+        connectBtn.textContent = '🔌 התחבר';
+        status.style.color = '#E63E70';
+        status.textContent = '✗ ' + e.message;
+      }
+    }
+  }, '🔌 התחבר');
+  card.appendChild(connectBtn);
+
+  wrap.appendChild(card);
+
+  wrap.appendChild(el('p', { class: 'muted center', style: { fontSize: '12px', marginTop: '14px', lineHeight: '1.6' } },
+    'הגדרה ראשונה? קרא את ה-README שב-GitHub עם הוראות התקנה לחשבון Cloudflare שלך.'
+  ));
+
+  return wrap;
+};
+
+/* ---------- profile select ---------- */
+SCREENS['profile-select'] = () => {
+  const wrap = el('div');
+
+  const hero = el('div', { class: 'welcome' },
+    el('div', { class: 'big-emoji' }, '📚🌟'),
+    el('h1', {}, 'אנגלית בכיף!'),
+    el('p', { class: 'muted', style: { marginTop: '8px' } }, 'בחרו ילד כדי להתחיל')
+  );
+  wrap.appendChild(hero);
+
+  const grid = el('div', { class: 'profile-grid' });
+  state.profiles.forEach(p => {
+    const card = el('div', { class: 'profile-card', onclick: () => { cfg.currentProfileId = p.id; saveCfg(); nav('home'); } },
+      el('div', { class: 'av-big', style: { background: avatarColor(p.id) } }, p.avatar || '🌟'),
+      el('div', { class: 'name' }, p.name),
+      el('div', { class: 'stars-mini' }, '⭐ ' + (p.stars || 0))
+    );
+    grid.appendChild(card);
+  });
+  grid.appendChild(el('div', { class: 'profile-card add', onclick: () => nav('profile-edit', { id: null }) },
+    el('div', { class: 'plus' }, '+'),
+    el('div', { class: 'name muted' }, 'הוסף ילד')
+  ));
+  wrap.appendChild(grid);
+
+  if (state.profiles.length > 0) {
+    wrap.appendChild(el('div', { class: 'mt center' },
+      el('button', { class: 'btn ghost sm', onclick: () => nav('parent-zone') }, '🔧 אזור הורה')
+    ));
+  }
+  return wrap;
+};
+
+function avatarColor(id) {
+  const colors = ['#FFD23F','#5BA9F0','#6BD96B','#FF8E3C','#9B5DE5','#FF5C8A'];
+  let h = 0;
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return colors[h % colors.length];
+}
+
+/* ---------- profile edit ---------- */
+SCREENS['profile-edit'] = ({ id }) => {
+  const editing = id ? state.profiles.find(p => p.id === id) : null;
+  let name = editing ? editing.name : '';
+  let avatar = editing ? editing.avatar : AVATAR_OPTS[0];
+
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => nav('profile-select')));
+  wrap.appendChild(el('h2', {}, editing ? 'עריכת פרופיל' : 'ילד חדש'));
+
+  const card = el('div', { class: 'card', style: { marginTop: '14px' } });
+
+  card.appendChild(el('div', { class: 'field' },
+    el('label', {}, 'שם'),
+    el('input', { id: 'pname', type: 'text', value: name, placeholder: 'איך קוראים לילד/ה?', oninput: (e) => name = e.target.value })
+  ));
+
+  card.appendChild(el('label', { style: { display: 'block', fontFamily: '"Varela Round"', marginBottom: '6px' } }, 'בחירת אייקון'));
+  const pick = el('div', { class: 'av-pick' });
+  AVATAR_OPTS.forEach(a => {
+    const opt = el('div', { class: 'av-opt' + (a === avatar ? ' sel' : ''), onclick: () => { avatar = a; pick.querySelectorAll('.av-opt').forEach(x => x.classList.remove('sel')); opt.classList.add('sel'); } }, a);
+    pick.appendChild(opt);
+  });
+  card.appendChild(pick);
+
+  card.appendChild(el('div', { class: 'row gap-sm', style: { marginTop: '14px' } },
+    el('button', { class: 'btn green full', onclick: () => {
+      if (!name.trim()) return alert('נא להזין שם');
+      if (editing) {
+        editing.name = name.trim(); editing.avatar = avatar;
+      } else {
+        const np = { id: uid(), name: name.trim(), avatar, stars: 0, stats: { questionsAnswered: 0, correct: 0 } };
+        state.profiles.push(np);
+      }
+      save();
+      nav('profile-select');
+    } }, '💾 שמור'),
+    editing && el('button', { class: 'btn ghost', onclick: () => {
+      if (!confirm('למחוק את הפרופיל?')) return;
+      state.profiles = state.profiles.filter(p => p.id !== id);
+      save();
+      nav('profile-select');
+    } }, '🗑️')
+  ));
+
+  wrap.appendChild(card);
+  return wrap;
+};
+
+/* ---------- topbar shared ---------- */
+function topBar() {
+  const p = getProfile();
+  return el('div', { class: 'topbar' },
+    el('div', { class: 'who', onclick: () => nav('profile-select') },
+      el('div', { class: 'av' }, p?.avatar || '🌟'),
+      el('span', { style: { fontFamily: '"Varela Round"' } }, p?.name || 'אורח')
+    ),
+    el('div', { class: 'stars' }, '⭐ ' + (p?.stars || 0))
+  );
+}
+
+function backBtn(onClick) {
+  return el('button', { class: 'back', onclick: onClick }, '→ חזור');
+}
+
+/* ---------- home ---------- */
+SCREENS['home'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(el('h2', { style: { marginTop: '8px' } }, 'מה תרצו לעשות היום?'));
+
+  const grid = el('div', { class: 'menu-grid' });
+
+  grid.appendChild(el('div', { class: 'menu-tile t-pink', onclick: () => nav('movies') },
+    el('div', { class: 'icon' }, '🎬'),
+    el('div', {},
+      el('h3', {}, 'סרטים'),
+      el('p', {}, 'צפו וענו על שאלות תוך כדי')
+    )
+  ));
+
+  grid.appendChild(el('div', { class: 'menu-tile t-blue', onclick: () => nav('games') },
+    el('div', { class: 'icon' }, '🎮'),
+    el('div', {},
+      el('h3', {}, 'משחקים'),
+      el('p', {}, 'התאמה, האזנה ודיבור')
+    )
+  ));
+
+  grid.appendChild(el('div', { class: 'menu-tile t-yellow', onclick: () => nav('progress') },
+    el('div', { class: 'icon' }, '🏆'),
+    el('div', {},
+      el('h3', {}, 'ההתקדמות שלי'),
+      el('p', {}, 'כוכבים, מילים שלמדתי')
+    )
+  ));
+
+  grid.appendChild(el('div', { class: 'menu-tile t-green', onclick: () => nav('parent-zone') },
+    el('div', { class: 'icon' }, '🔧'),
+    el('div', {},
+      el('h3', {}, 'אזור הורה'),
+      el('p', {}, 'הוספת מילים והגדרות')
+    )
+  ));
+
+  wrap.appendChild(grid);
+  return wrap;
+};
+
+/* ---------- movies list ---------- */
+SCREENS['movies'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(backBtn(() => nav('home')));
+  wrap.appendChild(el('h2', {}, '🎬 הסרטים שלי'));
+
+  if (state.movies.length === 0) {
+    wrap.appendChild(el('div', { class: 'empty' },
+      el('div', { class: 'em-emoji' }, '🎥'),
+      el('p', {}, 'עדיין אין סרטים'),
+      el('p', { class: 'muted', style: { fontSize: '13px', marginTop: '6px' } }, 'הורים: הוסיפו סרט מאזור הורה')
+    ));
+  } else {
+    const list = el('div', { class: 'movie-list' });
+    state.movies.forEach(m => {
+      const sizeStr = m.fileSize ? ' • ' + fmtBytes(m.fileSize) : '';
+      const statusIcon = m.uploaded ? '☁️' : '⏳';
+      list.appendChild(el('div', { class: 'movie-row', onclick: () => nav('player', { movieId: m.id }) },
+        el('div', { class: 'thumb' }, '🎬'),
+        el('div', { class: 'meta' },
+          el('div', { class: 'title' }, m.name),
+          el('div', { class: 'sub' }, statusIcon + ' ' + fmtTime(m.duration || 0) + sizeStr + ' • ' + ((m.customQuestions || []).length) + ' שאלות')
+        ),
+        el('button', { class: 'btn sm ghost', onclick: (e) => { e.stopPropagation(); nav('movie-add', { id: m.id }); } }, '⚙️')
+      ));
+    });
+    wrap.appendChild(list);
+  }
+
+  wrap.appendChild(el('div', { class: 'mt' },
+    el('button', { class: 'btn full green', onclick: () => nav('movie-add', {}) }, '+ הוסף סרט')
+  ));
+  return wrap;
+};
+
+/* ---------- movie add / edit (cloud) ---------- */
+SCREENS['movie-add'] = ({ id }) => {
+  const editing = id ? state.movies.find(m => m.id === id) : null;
+  let name = editing ? editing.name : '';
+  let interval = editing ? Math.round((editing.autoIntervalSec || 240) / 60) : 4;
+  let pickedFile = null;
+  let uploadMode = 'auto'; // 'auto' | 'direct' | 'multipart' | 'register'
+  let xhrRef = null;
+  let abortFlag = { cancelled: false };
+
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => nav('movies')));
+  wrap.appendChild(el('h2', {}, editing ? 'עריכת סרט' : 'הוספת סרט'));
+
+  // For editing: simpler form
+  if (editing) {
+    const card = el('div', { class: 'card' });
+    card.appendChild(el('div', { class: 'field' },
+      el('label', {}, 'שם הסרט'),
+      el('input', { type: 'text', value: name, oninput: (e) => name = e.target.value })
+    ));
+    card.appendChild(el('div', { class: 'field' },
+      el('label', {}, 'הפסקה לשאלה כל (דקות)'),
+      el('input', { type: 'number', min: '1', max: '30', value: interval, oninput: (e) => interval = parseInt(e.target.value) || 4 })
+    ));
+    card.appendChild(el('p', { class: 'muted', style: { fontSize: '13px' } },
+      'שמור ב-R2: ', fmtBytes(editing.fileSize), ' • ', fmtTime(editing.duration || 0)
+    ));
+    card.appendChild(el('button', {
+      class: 'btn green full mt',
+      onclick: () => {
+        if (!name.trim()) return alert('נא להזין שם');
+        editing.name = name.trim();
+        editing.autoIntervalSec = interval * 60;
+        save();
+        nav('movies');
+      }
+    }, '💾 שמור'));
+    card.appendChild(el('button', {
+      class: 'btn ghost full', style: { marginTop: '10px' },
+      onclick: () => nav('movie-questions', { id: editing.id })
+    }, '❓ שאלות מותאמות לפי זמן'));
+    card.appendChild(el('button', {
+      class: 'btn ghost full', style: { marginTop: '10px', color: '#E63E70' },
+      onclick: async () => {
+        if (!confirm('למחוק את הסרט מ-R2? פעולה לא הפיכה!')) return;
+        try {
+          await api('/api/movies/' + editing.id, { method: 'DELETE' });
+          state.movies = state.movies.filter(m => m.id !== editing.id);
+          showToast('🗑️ נמחק');
+          nav('movies');
+        } catch (e) { alert('שגיאה: ' + e.message); }
+      }
+    }, '🗑️ מחק סרט מ-R2'));
+    wrap.appendChild(card);
+    return wrap;
+  }
+
+  // === NEW MOVIE UPLOAD ===
+
+  // Mode picker
+  const modeCard = el('div', { class: 'card' });
+  modeCard.appendChild(el('h3', {}, 'בחר שיטת העלאה'));
+
+  const modeTiles = el('div', { class: 'menu-grid', style: { gridTemplateColumns: '1fr', marginTop: '10px' } });
+
+  const tileDirect = el('div', { class: 'menu-tile t-blue', onclick: () => { uploadMode = 'direct'; refreshUI(); } },
+    el('div', { class: 'icon' }, '⚡'),
+    el('div', {},
+      el('h3', {}, 'העלאה ישירה'),
+      el('p', {}, 'קבצים עד 100MB. מהיר.')
+    )
+  );
+  const tileMulti = el('div', { class: 'menu-tile t-pink', onclick: () => { uploadMode = 'multipart'; refreshUI(); } },
+    el('div', { class: 'icon' }, '🚀'),
+    el('div', {},
+      el('h3', {}, 'העלאה גדולה'),
+      el('p', {}, 'multipart עם בר התקדמות. לסרטים שלמים.')
+    )
+  );
+  const tileReg = el('div', { class: 'menu-tile t-green', onclick: () => nav('r2-register') },
+    el('div', { class: 'icon' }, '📁'),
+    el('div', {},
+      el('h3', {}, 'כבר ב-R2'),
+      el('p', {}, 'העלית עם wrangler? סנכרן עכשיו.')
+    )
+  );
+  modeTiles.appendChild(tileDirect);
+  modeTiles.appendChild(tileMulti);
+  modeTiles.appendChild(tileReg);
+  modeCard.appendChild(modeTiles);
+  wrap.appendChild(modeCard);
+
+  // Upload form (hidden until mode chosen)
+  const formCard = el('div', { class: 'card hide' });
+  wrap.appendChild(formCard);
+
+  function refreshUI() {
+    if (uploadMode === 'register') return;
+    formCard.classList.remove('hide');
+    formCard.innerHTML = '';
+
+    formCard.appendChild(el('h3', {}, uploadMode === 'multipart' ? '🚀 העלאה גדולה (multipart)' : '⚡ העלאה ישירה'));
+    formCard.appendChild(el('p', { class: 'muted', style: { fontSize: '13px', marginBottom: '10px' } },
+      uploadMode === 'multipart'
+        ? 'הקובץ מתחלק לחתיכות של 20MB. אפשר לבטל באמצע.'
+        : 'הקובץ נשלח בבת אחת. מתאים עד ~100MB.'
+    ));
+
+    formCard.appendChild(el('div', { class: 'field' },
+      el('label', {}, 'שם הסרט'),
+      el('input', { id: 'mname', type: 'text', value: name, placeholder: 'למשל: פרוזן', oninput: (e) => name = e.target.value })
+    ));
+
+    formCard.appendChild(el('div', { class: 'field' },
+      el('label', {}, 'הפסקה לשאלה כל (דקות)'),
+      el('input', { type: 'number', min: '1', max: '30', value: interval, oninput: (e) => interval = parseInt(e.target.value) || 4 })
+    ));
+
+    formCard.appendChild(el('div', { class: 'field' },
+      el('label', {}, 'בחר קובץ וידאו'),
+      el('input', { type: 'file', accept: 'video/*', onchange: (e) => onFilePicked(e.target.files[0]) })
+    ));
+
+    const filePreview = el('div', { id: 'filePreview' });
+    formCard.appendChild(filePreview);
+
+    // progress UI
+    const progressBox = el('div', { id: 'progBox', class: 'hide', style: { marginTop: '14px' } });
+    const progressLabel = el('p', { id: 'progLabel', style: { fontSize: '14px', textAlign: 'center', marginBottom: '6px' } });
+    const progressBar = el('div', { class: 'progress-bar' });
+    const progressFill = el('div', { id: 'progFill', class: 'fill' });
+    progressBar.appendChild(progressFill);
+    progressBox.appendChild(progressLabel);
+    progressBox.appendChild(progressBar);
+    formCard.appendChild(progressBox);
+
+    const abortBtn = el('button', { id: 'abortBtn', class: 'btn ghost full hide', style: { marginTop: '10px' }, onclick: () => doAbort() }, '✕ בטל העלאה');
+    formCard.appendChild(abortBtn);
+
+    const uploadBtn = el('button', {
+      id: 'uploadBtn', class: 'btn green full mt',
+      onclick: () => doUpload()
+    }, uploadMode === 'multipart' ? '🚀 התחל העלאה' : '⚡ העלה');
+    formCard.appendChild(uploadBtn);
+  }
+
+  function onFilePicked(file) {
+    if (!file) return;
+    pickedFile = file;
+    if (!name && file.name) {
+      name = file.name.replace(/\.[^.]+$/, '');
+      const inp = document.getElementById('mname');
+      if (inp) inp.value = name;
+    }
+    const sizeMB = file.size / (1024 * 1024);
+    let warn = '';
+    if (uploadMode === 'direct' && sizeMB > 100) {
+      warn = ' ⚠️ קובץ גדול מ-100MB - השתמש ב"העלאה גדולה"';
+    }
+    const prev = document.getElementById('filePreview');
+    if (prev) {
+      prev.innerHTML = '';
+      prev.appendChild(el('div', { class: 'card', style: { background: '#F0FFF0', padding: '10px', margin: 0 } },
+        el('p', { style: { fontSize: '14px' } }, '✅ ', el('strong', { class: 'eng', style: { direction: 'ltr', display: 'inline-block' } }, file.name)),
+        el('p', { class: 'muted', style: { fontSize: '12px' } }, 'גודל: ' + fmtBytes(file.size) + warn)
+      ));
+    }
+  }
+
+  async function getDuration(file) {
+    return new Promise((res) => {
+      const v = document.createElement('video');
+      v.preload = 'metadata';
+      const url = URL.createObjectURL(file);
+      const t = setTimeout(() => { URL.revokeObjectURL(url); res(0); }, 15000);
+      v.onloadedmetadata = () => { clearTimeout(t); URL.revokeObjectURL(url); res(v.duration || 0); };
+      v.onerror = () => { clearTimeout(t); URL.revokeObjectURL(url); res(0); };
+      v.src = url;
+    });
+  }
+
+  function setProgress(pct, label) {
+    const fill = document.getElementById('progFill');
+    const lab = document.getElementById('progLabel');
+    const box = document.getElementById('progBox');
+    if (box) box.classList.remove('hide');
+    if (fill) fill.style.width = pct + '%';
+    if (lab && label !== undefined) lab.textContent = label;
+  }
+
+  function doAbort() {
+    abortFlag.cancelled = true;
+    if (xhrRef) { try { xhrRef.abort(); } catch (e) {} }
+  }
+
+  async function doUpload() {
+    if (!name.trim()) return alert('נא להזין שם');
+    if (!pickedFile) return alert('נא לבחור קובץ');
+
+    const upBtn = document.getElementById('uploadBtn');
+    const abBtn = document.getElementById('abortBtn');
+    upBtn.setAttribute('disabled', 'disabled');
+    upBtn.textContent = '⏳ מעלה...';
+    abBtn.classList.remove('hide');
+    abortFlag = { cancelled: false };
+
+    try {
+      setProgress(2, '🎬 קורא מטא-דאטה...');
+      const dur = await getDuration(pickedFile);
+
+      let movieId;
+      if (uploadMode === 'multipart') {
+        movieId = await uploadMultipart(pickedFile, name.trim(), interval * 60, dur);
+      } else {
+        movieId = await uploadDirect(pickedFile, name.trim(), interval * 60, dur);
+      }
+
+      setProgress(100, '✓ הועלה בהצלחה!');
+      showToast('✅ הסרט הועלה');
+      // refresh state from server to pick up the new movie
+      await load();
+      setTimeout(() => nav('movies'), 600);
+    } catch (e) {
+      setProgress(0, '');
+      document.getElementById('progBox')?.classList.add('hide');
+      upBtn.removeAttribute('disabled');
+      upBtn.textContent = uploadMode === 'multipart' ? '🚀 התחל העלאה' : '⚡ העלה';
+      abBtn.classList.add('hide');
+      alert('❌ ' + (e.message || e));
+    }
+  }
+
+  async function uploadDirect(file, mname, autoSec, duration) {
+    return new Promise((resolve, reject) => {
+      const params = new URLSearchParams({
+        t: cfg.token,
+        fileName: file.name,
+        name: mname,
+        autoIntervalSec: autoSec,
+        duration: duration
+      });
+      const xhr = new XMLHttpRequest();
+      xhrRef = xhr;
+      xhr.open('PUT', cfg.apiUrl.replace(/\/$/, '') + '/api/upload/direct?' + params.toString());
+      xhr.setRequestHeader('Content-Type', file.type || 'video/mp4');
+      xhr.setRequestHeader('X-Auth', cfg.token);
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = (e.loaded / e.total) * 100;
+          setProgress(pct, `📤 ${fmtBytes(e.loaded)} / ${fmtBytes(e.total)}`);
+        }
+      };
+      xhr.onload = () => {
+        xhrRef = null;
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try { resolve(JSON.parse(xhr.responseText).movieId); }
+          catch (e) { reject(new Error('תשובה לא תקינה מהשרת')); }
+        } else {
+          reject(new Error('HTTP ' + xhr.status + ' - ' + (xhr.responseText || '').slice(0, 200)));
+        }
+      };
+      xhr.onerror = () => { xhrRef = null; reject(new Error('שגיאת רשת')); };
+      xhr.onabort = () => { xhrRef = null; reject(new Error('ההעלאה בוטלה')); };
+      xhr.send(file);
+    });
+  }
+
+  async function uploadMultipart(file, mname, autoSec, duration) {
+    setProgress(3, '🚀 מאתחל העלאה...');
+    const initResp = await api('/api/upload/init', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fileName: file.name, fileSize: file.size, mimeType: file.type || 'video/mp4',
+        name: mname, autoIntervalSec: autoSec, duration
+      })
+    });
+    const { movieId, uploadId, partSize } = initResp;
+    const numParts = Math.ceil(file.size / partSize);
+    const parts = [];
+
+    for (let i = 0; i < numParts; i++) {
+      if (abortFlag.cancelled) {
+        await api('/api/upload/abort', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ movieId, uploadId })
+        }).catch(() => {});
+        throw new Error('ההעלאה בוטלה');
+      }
+      const start = i * partSize;
+      const end = Math.min(start + partSize, file.size);
+      const blob = file.slice(start, end);
+      const partNumber = i + 1;
+
+      setProgress(5 + (90 * (i / numParts)), `📤 חלק ${partNumber}/${numParts} (${fmtBytes(end)} / ${fmtBytes(file.size)})`);
+
+      // retry per part
+      let lastErr;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (abortFlag.cancelled) break;
+        try {
+          const r = await fetch(apiUrl('/api/upload/part', { movieId, uploadId, partNumber }), {
+            method: 'PUT',
+            headers: { 'X-Auth': cfg.token },
+            body: blob
+          });
+          if (!r.ok) {
+            const txt = await r.text();
+            throw new Error('חלק ' + partNumber + ': ' + r.status + ' ' + txt.slice(0, 100));
+          }
+          const j = await r.json();
+          parts.push({ partNumber: j.partNumber, etag: j.etag });
+          lastErr = null;
+          break;
+        } catch (e) {
+          lastErr = e;
+          if (attempt < 2) await new Promise(rs => setTimeout(rs, 1500 * (attempt + 1)));
+        }
+      }
+      if (lastErr) {
+        await api('/api/upload/abort', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ movieId, uploadId })
+        }).catch(() => {});
+        throw lastErr;
+      }
+    }
+
+    setProgress(98, '🏁 משלים העלאה...');
+    await api('/api/upload/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ movieId, uploadId, parts })
+    });
+    return movieId;
+  }
+
+  return wrap;
+};
+
+/* ---------- r2-register: list & register objects already in R2 ---------- */
+SCREENS['r2-register'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => nav('movie-add')));
+  wrap.appendChild(el('h2', {}, '📁 קבצים ב-R2'));
+  wrap.appendChild(el('p', { class: 'muted' }, 'קבצים שהעלית עם wrangler או דרך הדאשבורד. רישום כאן יוסיף אותם לרשימת הסרטים.'));
+
+  const listBox = el('div', { class: 'mt' });
+  wrap.appendChild(listBox);
+
+  const refresh = async () => {
+    listBox.innerHTML = '<p class="muted center">טוען...</p>';
+    try {
+      const data = await api('/api/movies/list-r2');
+      listBox.innerHTML = '';
+      const objects = data.objects || [];
+      if (objects.length === 0) {
+        listBox.appendChild(el('div', { class: 'empty' },
+          el('div', { class: 'em-emoji' }, '📭'),
+          el('p', {}, 'אין קבצים ב-R2'),
+          el('p', { class: 'muted', style: { fontSize: '13px', marginTop: '8px' } }, 'העלה עם:'),
+          el('pre', { style: { fontSize: '11px', textAlign: 'left', background: '#fff', padding: '8px', border: '2px solid #2D1B4E', borderRadius: '8px', overflowX: 'auto', direction: 'ltr' } },
+            'wrangler r2 object put english-kids-videos/videos/movie.mp4 --file=./local.mp4'
+          )
+        ));
+        return;
+      }
+      objects.forEach(o => {
+        const row = el('div', { class: 'movie-row' },
+          el('div', { class: 'thumb', style: { background: o.isRegistered ? '#6BD96B' : '#FFD23F' } }, o.isRegistered ? '✓' : '🎬'),
+          el('div', { class: 'meta' },
+            el('div', { class: 'title eng', style: { direction: 'ltr' } }, o.name),
+            el('div', { class: 'sub' }, fmtBytes(o.size) + (o.isRegistered ? ' • רשום' : ' • לא רשום'))
+          )
+        );
+        if (!o.isRegistered) {
+          const regBtn = el('button', { class: 'btn sm green', onclick: async (e) => {
+            e.stopPropagation();
+            const mname = prompt('שם לסרט:', o.name.replace(/\.[^.]+$/, ''));
+            if (!mname) return;
+            const intStr = prompt('כל כמה דקות לעצור לשאלה?', '4');
+            if (!intStr) return;
+            try {
+              await api('/api/movies/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ r2Key: o.key, name: mname, autoIntervalSec: (parseInt(intStr) || 4) * 60 })
+              });
+              await load();
+              showToast('✓ נרשם!');
+              refresh();
+            } catch (err) {
+              alert('שגיאה: ' + err.message);
+            }
+          } }, '+ רשום');
+          row.appendChild(regBtn);
+        }
+        listBox.appendChild(row);
+      });
+    } catch (e) {
+      listBox.innerHTML = '<p style="color:#E63E70">שגיאה: ' + e.message + '</p>';
+    }
+  };
+  refresh();
+
+  wrap.appendChild(el('button', { class: 'btn ghost full mt', onclick: refresh }, '🔄 רענן'));
+  return wrap;
+};
+
+/* ---------- movie questions editor ---------- */
+SCREENS['movie-questions'] = ({ id }) => {
+  const movie = state.movies.find(m => m.id === id);
+  if (!movie) { nav('movies'); return el('div'); }
+
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => nav('movie-add', { id })));
+  wrap.appendChild(el('h2', {}, 'שאלות מותאמות'));
+  wrap.appendChild(el('p', { class: 'muted', style: { marginBottom: '10px' } }, 'שאלות שיופיעו ברגעים ספציפיים בסרט. אם אין שאלה לרגע מסוים, האפליקציה תבחר מילה רנדומלית מבנק המילים.'));
+
+  const list = el('div');
+
+  function refreshList() {
+    list.innerHTML = '';
+    if ((movie.customQuestions || []).length === 0) {
+      list.appendChild(el('div', { class: 'empty', style: { padding: '20px' } },
+        el('p', { class: 'muted' }, 'אין עדיין שאלות מותאמות')
+      ));
+      return;
+    }
+    movie.customQuestions.sort((a, b) => a.time - b.time);
+    movie.customQuestions.forEach((q, idx) => {
+      const text = q.vocabId ? (state.vocab.find(v => v.id === q.vocabId)?.en || '?') : (q.custom?.en || '?');
+      list.appendChild(el('div', { class: 'ts-row' },
+        el('div', { class: 'ts-time' }, fmtTime(q.time)),
+        el('div', { class: 'ts-text eng', style: { direction: 'ltr' } }, text),
+        el('button', { class: 'btn sm ghost', onclick: () => {
+          movie.customQuestions.splice(idx, 1);
+          save();
+          refreshList();
+        } }, '✕')
+      ));
+    });
+  }
+
+  refreshList();
+  wrap.appendChild(list);
+
+  wrap.appendChild(el('h3', { style: { marginTop: '16px' } }, 'הוספת שאלה'));
+
+  const addCard = el('div', { class: 'card' });
+  let timeStr = '0:00';
+  let mode = 'vocab'; // 'vocab' or 'custom'
+  let vocabId = state.vocab[0]?.id || '';
+  let customEn = '', customHe = '';
+
+  addCard.appendChild(el('div', { class: 'field' },
+    el('label', {}, 'זמן בסרט (דקה:שניה)'),
+    el('input', { type: 'text', placeholder: '5:30', oninput: (e) => timeStr = e.target.value })
+  ));
+
+  const modeRow = el('div', { class: 'row gap-sm', style: { marginBottom: '10px' } });
+  const btnVocab = el('button', { class: 'btn sm yellow', onclick: () => { mode = 'vocab'; refreshAddCard(); } }, 'מילה מהבנק');
+  const btnCustom = el('button', { class: 'btn sm ghost', onclick: () => { mode = 'custom'; refreshAddCard(); } }, 'משפט מותאם');
+  modeRow.appendChild(btnVocab);
+  modeRow.appendChild(btnCustom);
+  addCard.appendChild(modeRow);
+
+  const dynBox = el('div');
+  addCard.appendChild(dynBox);
+
+  function refreshAddCard() {
+    btnVocab.className = 'btn sm ' + (mode === 'vocab' ? 'yellow' : 'ghost');
+    btnCustom.className = 'btn sm ' + (mode === 'custom' ? 'yellow' : 'ghost');
+    dynBox.innerHTML = '';
+    if (mode === 'vocab') {
+      const sel = el('select', { onchange: (e) => vocabId = e.target.value });
+      state.vocab.forEach(v => sel.appendChild(el('option', { value: v.id }, `${v.en}  →  ${v.he}`)));
+      sel.value = vocabId;
+      dynBox.appendChild(el('div', { class: 'field' }, el('label', {}, 'בחר מילה'), sel));
+    } else {
+      dynBox.appendChild(el('div', { class: 'field' },
+        el('label', {}, 'משפט באנגלית'),
+        el('input', { class: 'eng-input', type: 'text', placeholder: 'Let it go!', oninput: (e) => customEn = e.target.value })
+      ));
+      dynBox.appendChild(el('div', { class: 'field' },
+        el('label', {}, 'תרגום בעברית'),
+        el('input', { type: 'text', placeholder: 'תני לזה ללכת!', oninput: (e) => customHe = e.target.value })
+      ));
+    }
+  }
+  refreshAddCard();
+
+  addCard.appendChild(el('button', {
+    class: 'btn green full mt',
+    onclick: () => {
+      const parts = timeStr.split(':').map(s => parseInt(s.trim()) || 0);
+      let secs = 0;
+      if (parts.length === 2) secs = parts[0] * 60 + parts[1];
+      else if (parts.length === 3) secs = parts[0] * 3600 + parts[1] * 60 + parts[2];
+      else return alert('פורמט זמן לא תקין');
+      if (secs <= 0) return alert('זמן חייב להיות גדול מאפס');
+
+      const q = { time: secs };
+      if (mode === 'vocab') {
+        if (!vocabId) return alert('נא לבחור מילה');
+        q.vocabId = vocabId;
+      } else {
+        if (!customEn.trim() || !customHe.trim()) return alert('נא למלא את שני השדות');
+        q.custom = { en: customEn.trim(), he: customHe.trim() };
+      }
+      movie.customQuestions = movie.customQuestions || [];
+      movie.customQuestions.push(q);
+      save();
+      timeStr = '0:00';
+      customEn = ''; customHe = '';
+      refreshList();
+      // reset inputs visually
+      addCard.querySelectorAll('input').forEach(i => i.value = '');
+    }
+  }, '+ הוסף שאלה'));
+
+  wrap.appendChild(addCard);
+  return wrap;
+};
+
+/* =========================================================================
+   VIDEO PLAYER WITH QUIZ
+   ========================================================================= */
+let playerCtx = null;
+
+SCREENS['player'] = ({ movieId }) => {
+  const movie = state.movies.find(m => m.id === movieId);
+  if (!movie) { nav('movies'); return el('div'); }
+
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => { stopPlayerCtx(); nav('movies'); }));
+  wrap.appendChild(el('h2', {}, '🎬 ' + movie.name));
+
+  const videoWrap = el('div', { class: 'video-wrap' });
+  const video = el('video', { controls: 'controls', playsinline: 'playsinline', preload: 'metadata' });
+  videoWrap.appendChild(video);
+  wrap.appendChild(videoWrap);
+
+  const info = el('div', { class: 'player-info' });
+  info.appendChild(el('div', { class: 'pi-row' },
+    el('span', {}, 'הפסקה אוטומטית כל'),
+    el('strong', {}, Math.round(movie.autoIntervalSec / 60) + ' דק׳')
+  ));
+  info.appendChild(el('div', { class: 'pi-row', style: { marginTop: '6px' } },
+    el('span', {}, 'שאלות מותאמות'),
+    el('strong', {}, (movie.customQuestions || []).length)
+  ));
+  wrap.appendChild(info);
+
+  // load video file - stream directly from R2 via Worker
+  if (!movie.uploaded) {
+    videoWrap.innerHTML = '<div style="padding:30px;color:#fff;text-align:center">⏳ הסרט עדיין מועלה...</div>';
+  } else {
+    video.src = apiUrl('/api/video/' + movie.id);
+    setupPlayerCtx(video, movie);
+  }
+
+  return wrap;
+};
+
+function stopPlayerCtx() {
+  if (playerCtx?.video?.src) {
+    try { URL.revokeObjectURL(playerCtx.video.src); } catch(e) {}
+  }
+  playerCtx = null;
+}
+
+function setupPlayerCtx(video, movie) {
+  const auto = movie.autoIntervalSec || state.settings.autoIntervalSec;
+  const customQs = (movie.customQuestions || []).slice().sort((a,b) => a.time - b.time);
+
+  // build "due" map: timestamps where to ask. Fired ones tracked
+  let nextAutoAt = auto;
+  const firedCustom = new Set();
+
+  playerCtx = { video, movie };
+
+  video.addEventListener('timeupdate', () => {
+    if (!video.paused && !document.body.querySelector('.overlay')) {
+      const t = video.currentTime;
+      // custom question?
+      for (const q of customQs) {
+        const key = q.time + '_' + (q.vocabId || q.custom?.en);
+        if (!firedCustom.has(key) && t >= q.time && t < q.time + 1.5) {
+          firedCustom.add(key);
+          triggerQuiz(q);
+          return;
+        }
+      }
+      // auto question?
+      if (t >= nextAutoAt) {
+        nextAutoAt = t + auto;
+        // pick a random vocab not already used as custom recently
+        if (state.vocab.length > 0) {
+          triggerQuiz({ vocabId: pick(state.vocab).id, time: t });
+        }
+      }
+    }
+  });
+
+  function triggerQuiz(q) {
+    video.pause();
+    showQuiz(q, () => {
+      // after quiz: resume
+      try { video.play(); } catch (e) {}
+    });
+  }
+}
+
+/* =========================================================================
+   QUIZ OVERLAY - core mechanic
+   ========================================================================= */
+function showQuiz(q, onClose) {
+  // resolve question content
+  let en, he, isPhrase = false;
+  if (q.vocabId) {
+    const v = state.vocab.find(x => x.id === q.vocabId);
+    if (!v) { onClose(); return; }
+    en = v.en; he = v.he;
+    isPhrase = en.split(' ').length > 1;
+  } else if (q.custom) {
+    en = q.custom.en; he = q.custom.he;
+    isPhrase = en.split(' ').length > 1;
+  } else { onClose(); return; }
+
+  const overlay = el('div', { class: 'overlay' });
+  const box = el('div', { class: 'quiz-box' });
+
+  box.appendChild(el('div', { class: 'q-label' }, isPhrase ? '🎯 משפט' : '✨ מילה'));
+
+  const target = isPhrase
+    ? el('div', { class: 'q-sentence' }, en)
+    : el('div', { class: 'q-word' }, en);
+  box.appendChild(target);
+
+  // play button (TTS)
+  const playBtn = el('button', { class: 'btn yellow sm', style: { display: 'block', margin: '0 auto 14px' }, onclick: () => speak(en, 'en-US') }, '🔊 שמע שוב');
+  box.appendChild(playBtn);
+  setTimeout(() => speak(en, 'en-US'), 350);
+
+  box.appendChild(el('div', { class: 'q-prompt' }, 'מה הפירוש בעברית?'));
+
+  // build distractors from other vocab he meanings
+  const distractors = shuffle(state.vocab.filter(v => v.he !== he)).slice(0, 3).map(v => v.he);
+  const allOptions = shuffle([he, ...distractors]);
+
+  const optsBox = el('div', { class: 'q-options' });
+  let answered = false;
+
+  allOptions.forEach(opt => {
+    const optEl = el('div', { class: 'q-opt', onclick: () => {
+      if (answered) return;
+      answered = true;
+      const correct = opt === he;
+      if (correct) {
+        optEl.classList.add('correct');
+        recordAnswer(true);
+        awardStars(2);
+        confetti();
+        // mark vocab as "seen correctly"
+        const p = getProfile();
+        if (p && q.vocabId) {
+          p.mistakes = (p.mistakes || []).filter(x => x !== q.vocabId);
+          save();
+        }
+        setTimeout(() => { overlay.remove(); onClose(); }, 1100);
+      } else {
+        optEl.classList.add('wrong');
+        recordAnswer(false);
+        // highlight correct
+        setTimeout(() => {
+          optsBox.querySelectorAll('.q-opt').forEach(o => {
+            if (o.textContent === he) o.classList.add('correct');
+          });
+        }, 300);
+        const p = getProfile();
+        if (p && q.vocabId) {
+          p.mistakes = p.mistakes || [];
+          if (!p.mistakes.includes(q.vocabId)) p.mistakes.push(q.vocabId);
+          save();
+        }
+        // show continue button
+        setTimeout(() => {
+          actions.querySelector('.btn-continue').classList.remove('hide');
+        }, 600);
+      }
+    } }, opt);
+    optsBox.appendChild(optEl);
+  });
+  box.appendChild(optsBox);
+
+  // mic option
+  const micBtn = el('button', { class: 'mic-btn' }, '🎤 או דברו: אמרו את התרגום באנגלית בקול');
+  const micResult = el('div', { class: 'mic-result' });
+  let micRec = null;
+  micBtn.addEventListener('click', () => {
+    if (micRec) { try { micRec.stop(); } catch(e){} micRec = null; micBtn.classList.remove('recording'); return; }
+    micBtn.classList.add('recording');
+    micResult.textContent = 'מקשיב...';
+    micRec = listen((text, final) => {
+      micResult.textContent = text;
+      if (final) {
+        const said = normalizeEn(text);
+        const want = normalizeEn(en);
+        if (said.includes(want) || want.includes(said)) {
+          if (!answered) {
+            answered = true;
+            optsBox.querySelectorAll('.q-opt').forEach(o => { if (o.textContent === he) o.classList.add('correct'); });
+            recordAnswer(true);
+            awardStars(3);
+            confetti();
+            setTimeout(() => { overlay.remove(); onClose(); }, 1200);
+          }
+        }
+      }
+    }, () => { micBtn.classList.remove('recording'); micRec = null; }, 'en-US');
+  });
+  box.appendChild(micBtn);
+  box.appendChild(micResult);
+
+  const actions = el('div', { class: 'q-actions', style: { marginTop: '14px' } });
+  actions.appendChild(el('button', { class: 'btn ghost btn-continue hide', onclick: () => { overlay.remove(); onClose(); } }, 'המשך'));
+  actions.appendChild(el('button', { class: 'btn ghost', onclick: () => { overlay.remove(); onClose(); } }, '⏭️ דלג'));
+  box.appendChild(actions);
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+/* =========================================================================
+   GAMES
+   ========================================================================= */
+SCREENS['games'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(backBtn(() => nav('home')));
+  wrap.appendChild(el('h2', {}, '🎮 משחקים'));
+
+  if (state.vocab.length < 4) {
+    wrap.appendChild(el('div', { class: 'empty' },
+      el('div', { class: 'em-emoji' }, '📖'),
+      el('p', {}, 'צריך לפחות 4 מילים כדי לשחק'),
+      el('button', { class: 'btn green sm mt', onclick: () => nav('vocab') }, 'הוסף מילים')
+    ));
+    return wrap;
+  }
+
+  const grid = el('div', { class: 'game-grid' });
+  grid.appendChild(el('div', { class: 'menu-tile t-pink', onclick: () => nav('game-match') },
+    el('div', { class: 'icon' }, '🎯'),
+    el('div', {}, el('h3', {}, 'התאמה'), el('p', {}, 'גרור מילים לתרגום'))
+  ));
+  grid.appendChild(el('div', { class: 'menu-tile t-blue', onclick: () => nav('game-listen') },
+    el('div', { class: 'icon' }, '🔊'),
+    el('div', {}, el('h3', {}, 'שמע ובחר'), el('p', {}, 'הקשבה והבנה'))
+  ));
+  grid.appendChild(el('div', { class: 'menu-tile t-green', onclick: () => nav('game-speak') },
+    el('div', { class: 'icon' }, '🎤'),
+    el('div', {}, el('h3', {}, 'אמור באנגלית'), el('p', {}, 'תרגול דיבור'))
+  ));
+  grid.appendChild(el('div', { class: 'menu-tile t-yellow', onclick: () => nav('game-mc') },
+    el('div', { class: 'icon' }, '❓'),
+    el('div', {}, el('h3', {}, 'רב ברירה'), el('p', {}, '4 אפשרויות'))
+  ));
+
+  const p = getProfile();
+  if (p && (p.mistakes || []).length > 0) {
+    wrap.appendChild(el('div', { class: 'card pop', style: { marginTop: '14px', borderColor: '#FF5C8A' } },
+      el('h3', {}, '🔥 חזרה על מילים שטעית בהן'),
+      el('p', { class: 'muted' }, p.mistakes.length + ' מילים מחכות'),
+      el('button', { class: 'btn pink full mt', onclick: () => nav('game-mc', { onlyMistakes: true }) }, 'תרגל אותן עכשיו')
+    ));
+  }
+
+  wrap.appendChild(grid);
+  return wrap;
+};
+
+/* ----- match game ----- */
+SCREENS['game-match'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(backBtn(() => nav('games')));
+  wrap.appendChild(el('h2', {}, '🎯 התאמה'));
+  wrap.appendChild(el('p', { class: 'muted' }, 'הקש על מילה באנגלית, ואז על התרגום הנכון'));
+
+  const ROUND_SIZE = 5;
+  const round = shuffle(state.vocab).slice(0, ROUND_SIZE);
+  const enList = shuffle(round.map(v => ({ id: v.id, text: v.en })));
+  const heList = shuffle(round.map(v => ({ id: v.id, text: v.he })));
+  let selected = null;
+  let matchedCount = 0;
+  let mistakes = 0;
+
+  const chips = el('div', { class: 'chips' },
+    el('div', { class: 'chip green' }, '✓ ' + matchedCount + '/' + ROUND_SIZE),
+    el('div', { class: 'chip pink' }, '✗ ' + mistakes)
+  );
+  wrap.appendChild(chips);
+
+  function updateChips() {
+    chips.innerHTML = '';
+    chips.appendChild(el('div', { class: 'chip green' }, '✓ ' + matchedCount + '/' + ROUND_SIZE));
+    chips.appendChild(el('div', { class: 'chip pink' }, '✗ ' + mistakes));
+  }
+
+  const board = el('div', { class: 'match-board' });
+  const colEn = el('div', { class: 'match-col' });
+  const colHe = el('div', { class: 'match-col' });
+
+  enList.forEach(item => {
+    const c = el('div', { class: 'match-card eng', 'data-id': item.id, 'data-side': 'en', onclick: () => onPick(c, item, 'en') }, item.text);
+    colEn.appendChild(c);
+  });
+  heList.forEach(item => {
+    const c = el('div', { class: 'match-card', 'data-id': item.id, 'data-side': 'he', onclick: () => onPick(c, item, 'he') }, item.text);
+    colHe.appendChild(c);
+  });
+
+  board.appendChild(colEn);
+  board.appendChild(colHe);
+  wrap.appendChild(board);
+
+  function onPick(cardEl, item, side) {
+    if (cardEl.classList.contains('matched')) return;
+    if (!selected) {
+      selected = { cardEl, item, side };
+      cardEl.classList.add('selected');
+      if (side === 'en') speak(item.text, 'en-US');
+      return;
+    }
+    if (selected.side === side) {
+      // switching selection on same side
+      selected.cardEl.classList.remove('selected');
+      selected = { cardEl, item, side };
+      cardEl.classList.add('selected');
+      if (side === 'en') speak(item.text, 'en-US');
+      return;
+    }
+    // matched check
+    if (selected.item.id === item.id) {
+      cardEl.classList.add('matched');
+      selected.cardEl.classList.remove('selected');
+      selected.cardEl.classList.add('matched');
+      matchedCount++;
+      awardStars(1);
+      recordAnswer(true);
+      updateChips();
+      const p = getProfile();
+      if (p) {
+        p.mistakes = (p.mistakes || []).filter(x => x !== item.id);
+        save();
+      }
+      if (matchedCount === ROUND_SIZE) {
+        setTimeout(() => {
+          confetti();
+          awardStars(3);
+          setTimeout(() => { if (confirm('סיימת את הסיבוב! לסיבוב חדש?')) nav('game-match'); else nav('games'); }, 800);
+        }, 400);
+      }
+      selected = null;
+    } else {
+      cardEl.classList.add('wrong');
+      selected.cardEl.classList.add('wrong');
+      mistakes++;
+      recordAnswer(false);
+      const p = getProfile();
+      if (p) {
+        p.mistakes = p.mistakes || [];
+        if (!p.mistakes.includes(item.id)) p.mistakes.push(item.id);
+        if (!p.mistakes.includes(selected.item.id)) p.mistakes.push(selected.item.id);
+        save();
+      }
+      const sel = selected;
+      selected = null;
+      setTimeout(() => {
+        cardEl.classList.remove('wrong');
+        sel.cardEl.classList.remove('wrong', 'selected');
+        updateChips();
+      }, 700);
+    }
+  }
+
+  return wrap;
+};
+
+/* ----- listen game ----- */
+SCREENS['game-listen'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(backBtn(() => nav('games')));
+  wrap.appendChild(el('h2', {}, '🔊 שמע ובחר'));
+
+  const stage = el('div', { class: 'card pop' });
+  const stageInner = el('div', { class: 'listen-stage' });
+  let current = null;
+  let answered = false;
+
+  const speakerBtn = el('button', { class: 'big-speak' }, '🔊');
+  const optsBox = el('div', { class: 'q-options' });
+
+  function nextRound() {
+    answered = false;
+    current = pick(state.vocab);
+    const distractors = shuffle(state.vocab.filter(v => v.id !== current.id)).slice(0, 3);
+    const opts = shuffle([current, ...distractors]);
+
+    optsBox.innerHTML = '';
+    opts.forEach(v => {
+      const o = el('div', { class: 'q-opt', onclick: () => {
+        if (answered) return;
+        answered = true;
+        const correct = v.id === current.id;
+        if (correct) {
+          o.classList.add('correct');
+          awardStars(2);
+          recordAnswer(true);
+          confetti();
+          const p = getProfile();
+          if (p) { p.mistakes = (p.mistakes || []).filter(x => x !== current.id); save(); }
+          setTimeout(nextRound, 900);
+        } else {
+          o.classList.add('wrong');
+          recordAnswer(false);
+          optsBox.querySelectorAll('.q-opt').forEach(x => { if (x.textContent === current.he) x.classList.add('correct'); });
+          const p = getProfile();
+          if (p) { p.mistakes = p.mistakes || []; if (!p.mistakes.includes(current.id)) p.mistakes.push(current.id); save(); }
+          setTimeout(nextRound, 1500);
+        }
+      } }, v.he);
+      optsBox.appendChild(o);
+    });
+
+    setTimeout(() => speak(current.en, 'en-US'), 200);
+  }
+
+  speakerBtn.addEventListener('click', () => { if (current) speak(current.en, 'en-US'); });
+
+  stageInner.appendChild(speakerBtn);
+  stageInner.appendChild(el('p', { class: 'hint' }, 'הקש כדי לשמוע שוב'));
+  stage.appendChild(stageInner);
+  stage.appendChild(optsBox);
+  wrap.appendChild(stage);
+
+  nextRound();
+  return wrap;
+};
+
+/* ----- speak game ----- */
+SCREENS['game-speak'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(backBtn(() => nav('games')));
+  wrap.appendChild(el('h2', {}, '🎤 אמור באנגלית'));
+
+  const stage = el('div', { class: 'card pop' });
+  const stageInner = el('div', { class: 'speak-stage' });
+  stage.appendChild(stageInner);
+  wrap.appendChild(stage);
+
+  let current = null;
+  let answered = false;
+  let micRec = null;
+
+  function nextRound() {
+    stageInner.innerHTML = '';
+    answered = false;
+    current = pick(state.vocab);
+
+    stageInner.appendChild(el('div', { class: 'q-label' }, 'אמור באנגלית את:'));
+    stageInner.appendChild(el('div', { class: 'target-he' }, current.he));
+
+    const hintEn = el('div', { class: 'hint-en', onclick: () => hintEn.classList.toggle('show') }, current.en);
+    stageInner.appendChild(hintEn);
+    stageInner.appendChild(el('p', { class: 'hint', style: { fontSize: '12px' } }, '(הקש על המעורפל לרמז)'));
+
+    const micBtn = el('button', { class: 'mic-btn', style: { marginTop: '14px' } }, '🎤 התחל לדבר');
+    const micResult = el('div', { class: 'mic-result' });
+
+    micBtn.addEventListener('click', () => {
+      if (micRec) { try { micRec.stop(); } catch(e){} micRec = null; micBtn.classList.remove('recording'); return; }
+      micBtn.classList.add('recording');
+      micResult.textContent = 'מקשיב...';
+      micRec = listen((text, final) => {
+        micResult.textContent = text;
+        if (final && !answered) {
+          const said = normalizeEn(text);
+          const want = normalizeEn(current.en);
+          if (said.includes(want) || want.includes(said)) {
+            answered = true;
+            micResult.style.background = '#6BD96B';
+            micResult.style.color = '#fff';
+            awardStars(3);
+            recordAnswer(true);
+            confetti();
+            const p = getProfile();
+            if (p) { p.mistakes = (p.mistakes || []).filter(x => x !== current.id); save(); }
+            setTimeout(nextRound, 1300);
+          } else {
+            micResult.style.background = '#FF5C8A';
+            micResult.style.color = '#fff';
+            recordAnswer(false);
+            const p = getProfile();
+            if (p) { p.mistakes = p.mistakes || []; if (!p.mistakes.includes(current.id)) p.mistakes.push(current.id); save(); }
+          }
+        }
+      }, () => { micBtn.classList.remove('recording'); micRec = null; }, 'en-US');
+    });
+
+    stageInner.appendChild(micBtn);
+    stageInner.appendChild(micResult);
+    stageInner.appendChild(el('div', { class: 'row gap-sm', style: { justifyContent: 'center', marginTop: '14px' } },
+      el('button', { class: 'btn yellow sm', onclick: () => speak(current.en, 'en-US') }, '🔊 שמע'),
+      el('button', { class: 'btn ghost sm', onclick: nextRound }, '⏭️ הבא')
+    ));
+  }
+
+  nextRound();
+  return wrap;
+};
+
+/* ----- multiple choice game ----- */
+SCREENS['game-mc'] = ({ onlyMistakes } = {}) => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(backBtn(() => nav('games')));
+  wrap.appendChild(el('h2', {}, onlyMistakes ? '🔥 תיקון טעויות' : '❓ רב ברירה'));
+
+  let pool = state.vocab;
+  if (onlyMistakes) {
+    const p = getProfile();
+    pool = state.vocab.filter(v => (p?.mistakes || []).includes(v.id));
+    if (pool.length < 4) pool = [...pool, ...shuffle(state.vocab.filter(v => !pool.includes(v))).slice(0, 4 - pool.length)];
+  }
+
+  const stage = el('div', { class: 'card pop' });
+  wrap.appendChild(stage);
+
+  let current = null;
+  let answered = false;
+
+  function nextRound() {
+    stage.innerHTML = '';
+    answered = false;
+    current = pick(pool);
+
+    stage.appendChild(el('div', { class: 'q-label' }, '✨ מה הפירוש?'));
+    stage.appendChild(el('div', { class: 'q-word' }, current.en));
+    stage.appendChild(el('button', { class: 'btn yellow sm', style: { display: 'block', margin: '0 auto 14px' }, onclick: () => speak(current.en, 'en-US') }, '🔊 שמע'));
+    setTimeout(() => speak(current.en, 'en-US'), 200);
+
+    const distractors = shuffle(state.vocab.filter(v => v.id !== current.id && v.he !== current.he)).slice(0, 3);
+    const opts = shuffle([current, ...distractors]);
+
+    const optsBox = el('div', { class: 'q-options' });
+    opts.forEach(v => {
+      const o = el('div', { class: 'q-opt', onclick: () => {
+        if (answered) return;
+        answered = true;
+        if (v.id === current.id) {
+          o.classList.add('correct');
+          awardStars(2);
+          recordAnswer(true);
+          confetti();
+          const p = getProfile();
+          if (p) { p.mistakes = (p.mistakes || []).filter(x => x !== current.id); save(); }
+          setTimeout(nextRound, 900);
+        } else {
+          o.classList.add('wrong');
+          recordAnswer(false);
+          optsBox.querySelectorAll('.q-opt').forEach(x => { if (x.textContent === current.he) x.classList.add('correct'); });
+          const p = getProfile();
+          if (p) { p.mistakes = p.mistakes || []; if (!p.mistakes.includes(current.id)) p.mistakes.push(current.id); save(); }
+          setTimeout(nextRound, 1400);
+        }
+      } }, v.he);
+      optsBox.appendChild(o);
+    });
+    stage.appendChild(optsBox);
+  }
+
+  nextRound();
+  return wrap;
+};
+
+/* =========================================================================
+   PROGRESS
+   ========================================================================= */
+SCREENS['progress'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(topBar());
+  wrap.appendChild(backBtn(() => nav('home')));
+  const p = getProfile();
+  if (!p) { nav('profile-select'); return wrap; }
+
+  wrap.appendChild(el('h2', {}, '🏆 ההתקדמות של ' + p.name));
+
+  const stats = p.stats || { questionsAnswered: 0, correct: 0 };
+  const acc = stats.questionsAnswered > 0 ? Math.round(100 * stats.correct / stats.questionsAnswered) : 0;
+
+  const grid = el('div', { class: 'stats-grid' });
+  grid.appendChild(el('div', { class: 'stat-card' },
+    el('div', { class: 'num' }, p.stars || 0),
+    el('div', { class: 'lbl' }, '⭐ כוכבים')
+  ));
+  grid.appendChild(el('div', { class: 'stat-card' },
+    el('div', { class: 'num' }, stats.questionsAnswered),
+    el('div', { class: 'lbl' }, '❓ שאלות שעניתי')
+  ));
+  grid.appendChild(el('div', { class: 'stat-card' },
+    el('div', { class: 'num' }, acc + '%'),
+    el('div', { class: 'lbl' }, '🎯 אחוז דיוק')
+  ));
+  grid.appendChild(el('div', { class: 'stat-card' },
+    el('div', { class: 'num' }, (p.mistakes || []).length),
+    el('div', { class: 'lbl' }, '🔥 לתרגול')
+  ));
+  wrap.appendChild(grid);
+
+  if ((p.mistakes || []).length > 0) {
+    wrap.appendChild(el('div', { class: 'card pop mt' },
+      el('h3', {}, 'מילים שצריך לתרגל'),
+      el('p', { class: 'muted' }, 'הקש על מילה כדי לשמוע אותה'),
+      ...p.mistakes.map(mid => {
+        const v = state.vocab.find(x => x.id === mid);
+        if (!v) return null;
+        return el('div', { class: 'vocab-row', onclick: () => speak(v.en, 'en-US') },
+          el('span', { class: 'v-en' }, v.en),
+          el('span', { class: 'v-arrow' }, '←'),
+          el('span', { class: 'v-he' }, v.he),
+          el('span', { style: { fontSize: '18px' } }, '🔊')
+        );
+      }).filter(Boolean),
+      el('button', { class: 'btn pink full mt', onclick: () => nav('game-mc', { onlyMistakes: true }) }, 'תרגל את כל המילים')
+    ));
+  }
+
+  return wrap;
+};
+
+/* =========================================================================
+   PARENT ZONE
+   ========================================================================= */
+SCREENS['parent-zone'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => nav(cfg.currentProfileId ? 'home' : 'profile-select')));
+  wrap.appendChild(el('h2', {}, '🔧 אזור הורה'));
+
+  const grid = el('div', { class: 'menu-grid', style: { gridTemplateColumns: '1fr' } });
+  grid.appendChild(el('div', { class: 'menu-tile t-yellow', onclick: () => nav('vocab') },
+    el('div', { class: 'icon' }, '📖'),
+    el('div', {}, el('h3', {}, 'בנק מילים'), el('p', {}, state.vocab.length + ' מילים זמינות'))
+  ));
+  grid.appendChild(el('div', { class: 'menu-tile t-pink', onclick: () => nav('movies') },
+    el('div', { class: 'icon' }, '🎬'),
+    el('div', {}, el('h3', {}, 'ניהול סרטים'), el('p', {}, state.movies.length + ' סרטים'))
+  ));
+  grid.appendChild(el('div', { class: 'menu-tile t-blue', onclick: () => nav('settings') },
+    el('div', { class: 'icon' }, '⚙️'),
+    el('div', {}, el('h3', {}, 'הגדרות'), el('p', {}, 'מרווחים, גיבוי'))
+  ));
+  wrap.appendChild(grid);
+  return wrap;
+};
+
+/* ---------- vocab manager ---------- */
+SCREENS['vocab'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => nav('parent-zone')));
+  wrap.appendChild(el('h2', {}, '📖 בנק מילים'));
+
+  const addCard = el('div', { class: 'card' });
+  let newEn = '', newHe = '';
+  addCard.appendChild(el('div', { class: 'field-row' },
+    el('div', { class: 'field' },
+      el('label', {}, 'אנגלית'),
+      el('input', { class: 'eng-input', type: 'text', placeholder: 'apple', oninput: (e) => newEn = e.target.value })
+    ),
+    el('div', { class: 'field' },
+      el('label', {}, 'עברית'),
+      el('input', { type: 'text', placeholder: 'תפוח', oninput: (e) => newHe = e.target.value })
+    )
+  ));
+  addCard.appendChild(el('button', {
+    class: 'btn green full',
+    onclick: () => {
+      if (!newEn.trim() || !newHe.trim()) return alert('נא למלא את שני השדות');
+      state.vocab.push({ id: uid(), en: newEn.trim().toLowerCase(), he: newHe.trim() });
+      save();
+      addCard.querySelectorAll('input').forEach(i => i.value = '');
+      newEn = ''; newHe = '';
+      refresh();
+    }
+  }, '+ הוסף מילה'));
+  wrap.appendChild(addCard);
+
+  const search = el('input', { type: 'text', placeholder: '🔍 חיפוש...', style: { width: '100%', padding: '12px', borderRadius: '14px', border: '3px solid #2D1B4E', fontFamily: 'Heebo', fontSize: '16px', marginBottom: '12px' }, oninput: (e) => refresh(e.target.value) });
+  wrap.appendChild(search);
+
+  const listBox = el('div');
+  wrap.appendChild(listBox);
+
+  function refresh(q = '') {
+    listBox.innerHTML = '';
+    const ql = q.toLowerCase();
+    const filtered = state.vocab.filter(v => !q || v.en.includes(ql) || v.he.includes(q));
+    filtered.forEach(v => {
+      listBox.appendChild(el('div', { class: 'vocab-row' },
+        el('span', { class: 'v-en', onclick: () => speak(v.en, 'en-US') }, v.en),
+        el('span', { class: 'v-arrow' }, '←'),
+        el('span', { class: 'v-he' }, v.he),
+        el('button', { class: 'v-del', onclick: () => {
+          if (!confirm('למחוק?')) return;
+          state.vocab = state.vocab.filter(x => x.id !== v.id);
+          save(); refresh(q);
+        } }, '✕')
+      ));
+    });
+    if (filtered.length === 0) {
+      listBox.appendChild(el('p', { class: 'muted center' }, 'אין תוצאות'));
+    }
+  }
+  refresh();
+  return wrap;
+};
+
+/* ---------- settings ---------- */
+SCREENS['settings'] = () => {
+  const wrap = el('div');
+  wrap.appendChild(backBtn(() => nav('parent-zone')));
+  wrap.appendChild(el('h2', {}, '⚙️ הגדרות'));
+
+  // Cloud connection card
+  const cloudCard = el('div', { class: 'card', style: { background: '#F0F8FF' } });
+  cloudCard.appendChild(el('h3', {}, '☁️ חיבור לשרת'));
+  cloudCard.appendChild(el('p', { class: 'muted', style: { fontSize: '12px', wordBreak: 'break-all', direction: 'ltr', textAlign: 'left' } }, cfg.apiUrl || '(לא מוגדר)'));
+  cloudCard.appendChild(el('button', {
+    class: 'btn ghost full', style: { marginTop: '10px' },
+    onclick: () => {
+      if (!confirm('זה ינתק אותך מהשרת. להמשיך?')) return;
+      cfg.apiUrl = ''; cfg.token = ''; cfg.currentProfileId = null;
+      saveCfg();
+      state.screen = { name: 'setup', params: {} };
+      render();
+    }
+  }, '🔄 שנה שרת / סיסמה'));
+  cloudCard.appendChild(el('button', {
+    class: 'btn ghost full', style: { marginTop: '10px' },
+    onclick: async () => {
+      try {
+        await load();
+        showToast('✓ סונכרן');
+        render();
+      } catch (e) { alert('שגיאה: ' + e.message); }
+    }
+  }, '🔁 סנכרן עכשיו'));
+  wrap.appendChild(cloudCard);
+
+  // Default settings
+  const card = el('div', { class: 'card' });
+  card.appendChild(el('div', { class: 'field' },
+    el('label', {}, 'הפסקה אוטומטית כל (דקות) - ברירת מחדל'),
+    el('input', { type: 'number', min: '1', max: '30', value: Math.round(state.settings.autoIntervalSec / 60), oninput: (e) => { state.settings.autoIntervalSec = (parseInt(e.target.value) || 4) * 60; save(); } })
+  ));
+
+  card.appendChild(el('button', {
+    class: 'btn yellow full mt',
+    onclick: () => {
+      const data = JSON.stringify({
+        profiles: state.profiles, vocab: state.vocab,
+        movies: state.movies.map(m => ({ id: m.id, name: m.name, customQuestions: m.customQuestions, autoIntervalSec: m.autoIntervalSec })),
+        settings: state.settings
+      }, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'eng-kids-backup-' + new Date().toISOString().slice(0,10) + '.json';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  }, '💾 הורד גיבוי JSON'));
+
+  wrap.appendChild(card);
+  wrap.appendChild(el('p', { class: 'muted center mt', style: { fontSize: '12px' } }, 'הנתונים נשמרים בענן. הקבצים ב-R2.'));
+  return wrap;
+};
+
+/* =========================================================================
+   BOOT
+   ========================================================================= */
+async function boot() {
+  loadCfg();
+  if (!cfg.apiUrl || !cfg.token) {
+    state.screen = { name: 'setup', params: {} };
+    render();
+    return;
+  }
+  // Show loading screen
+  root.innerHTML = '<div class="welcome"><div class="big-emoji">📚</div><p style="margin-top:14px">טוען נתונים מהענן...</p></div>';
+  try {
+    await load();
+    if (state.profiles.length === 0) state.screen = { name: 'profile-select', params: {} };
+    else if (!cfg.currentProfileId) state.screen = { name: 'profile-select', params: {} };
+    else state.screen = { name: 'home', params: {} };
+    render();
+  } catch (e) {
+    root.innerHTML = '';
+    if (e.message.includes('סיסמה') || e.message.includes('401') || e.message.includes('Unauthorized')) {
+      state.screen = { name: 'setup', params: { error: 'סיסמה שגויה - הזן שוב' } };
+    } else {
+      state.screen = { name: 'setup', params: { error: 'לא ניתן להתחבר: ' + e.message } };
+    }
+    render();
+  }
+}
+
+boot();
+
+// register service worker if available (for PWA install prompt)
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    self.addEventListener('install', (e) => self.skipWaiting());
+    self.addEventListener('activate', (e) => self.clients.claim());
+    self.addEventListener('fetch', (e) => {});
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  try { navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {}); } catch (e) {}
+}
+</script>
+</body>
+</html>
