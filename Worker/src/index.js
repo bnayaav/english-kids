@@ -329,6 +329,75 @@ export default {
         return new Response(obj.body, { status: 200, headers });
       }
 
+      // ====== Translate subtitles batch via Anthropic Claude API ======
+      // POST { sentences: ["text1", "text2", ...] }
+      // Returns: { translations: [{he: "...", words: {"love":"אוהב", ...}}, ...] }
+      if (path === '/api/translate-batch' && request.method === 'POST') {
+        if (!env.ANTHROPIC_API_KEY) return err('ANTHROPIC_API_KEY not configured', 500);
+        const body = await request.json();
+        const sentences = body.sentences || [];
+        if (!Array.isArray(sentences) || sentences.length === 0)
+          return err('sentences[] required');
+        if (sentences.length > 50) return err('Max 50 sentences per batch');
+
+        // Prepare numbered list for the model
+        const numbered = sentences.map((s, i) => `${i + 1}. ${s}`).join('\n');
+
+        const prompt = `You are translating English movie subtitles for a children's English-learning app. Hebrew-speaking kids will use this to learn English.
+
+For EACH numbered subtitle below, provide:
+1. A natural, simple Hebrew translation (suitable for ages 6-12)
+2. A word-by-word dictionary: every meaningful English word → Hebrew (skip articles like "the", "a"; include verbs, nouns, adjectives, adverbs)
+
+Return STRICTLY valid JSON in this exact format, no markdown, no extra text:
+{"results":[{"i":1,"he":"...","words":{"english":"עברית", ...}}, {"i":2,"he":"...","words":{...}}, ...]}
+
+Subtitles:
+${numbered}`;
+
+        try {
+          const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'x-api-key': env.ANTHROPIC_API_KEY,
+              'anthropic-version': '2023-06-01',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'claude-haiku-4-5',
+              max_tokens: 8000,
+              messages: [{ role: 'user', content: prompt }]
+            })
+          });
+          if (!claudeResp.ok) {
+            const t = await claudeResp.text();
+            return err('Claude API: ' + t.slice(0, 300), claudeResp.status);
+          }
+          const data = await claudeResp.json();
+          const text = data.content?.[0]?.text || '';
+          // Try to extract JSON
+          let parsed;
+          try {
+            // strip optional markdown fences
+            const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```$/, '').trim();
+            parsed = JSON.parse(cleaned);
+          } catch (e) {
+            // try to find first { ... last }
+            const m = text.match(/\{[\s\S]*\}/);
+            if (m) parsed = JSON.parse(m[0]);
+            else return err('Failed to parse Claude response', 500);
+          }
+          // Map results back to original order
+          const translations = sentences.map((_, i) => {
+            const r = (parsed.results || []).find((x) => x.i === i + 1);
+            return r ? { he: r.he, words: r.words || {} } : { he: null, words: {} };
+          });
+          return json({ translations });
+        } catch (e) {
+          return err('Translation failed: ' + (e.message || e), 500);
+        }
+      }
+
       return err('Not found', 404);
     } catch (e) {
       console.error('worker err:', e);
