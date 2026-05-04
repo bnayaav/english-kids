@@ -788,6 +788,109 @@ h3 { font-size: clamp(18px, 4.5vw, 22px); }
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* Hebrew sentence display */
+.q-he-sentence {
+  background: #FFE9C7;
+  border: 2px dashed var(--ink);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-family: "Varela Round", sans-serif;
+  font-size: 18px;
+  text-align: center;
+  color: var(--ink);
+  direction: rtl;
+}
+.q-he-target {
+  font-family: "Varela Round";
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--pink);
+  text-align: center;
+  margin: 10px 0;
+  -webkit-text-stroke: 1px var(--ink);
+}
+
+/* Hint */
+.hint {
+  background: #FFF8DC;
+  border-left: 4px solid var(--yellow);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--ink);
+  text-align: center;
+}
+
+/* LEARN CARD - first exposure */
+.quiz-box.learn-card {
+  background: linear-gradient(135deg, #FFF8EC 0%, #E8F4FF 100%);
+  border-color: var(--blue);
+}
+.q-label-learn {
+  background: var(--blue);
+  color: #fff;
+}
+.highlight-word {
+  background: var(--yellow);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  display: inline-block;
+  animation: highlightPulse 1.2s ease-in-out infinite;
+}
+@keyframes highlightPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.learn-translation {
+  background: #fff !important;
+  border: 3px solid var(--green) !important;
+  border-style: solid !important;
+  font-size: 20px !important;
+  font-weight: bold;
+  color: var(--green-dark, #4DBC4D);
+}
+.word-focus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 14px 0;
+  padding: 12px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.word-focus-en {
+  font-family: "Fredoka", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--blue);
+  direction: ltr;
+}
+.word-focus-arrow {
+  font-size: 22px;
+  color: var(--ink-soft);
+}
+.word-focus-he {
+  font-family: "Varela Round";
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--pink);
+}
+.audio-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
 /* progression bar (in topbar) */
 .prog-wrap {
   background: #fff;
@@ -1286,63 +1389,287 @@ function pickChallengeWord(text) {
 
 // Lookup word in dictionary - tries forms
 function dictLookup(word) {
-  const lower = word.toLowerCase();
+  const lower = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (!lower) return null;
   if (KIDS_DICT[lower]) return KIDS_DICT[lower];
   // Try removing -s, -ed, -ing
   if (lower.endsWith('s') && KIDS_DICT[lower.slice(0, -1)]) return KIDS_DICT[lower.slice(0, -1)];
   if (lower.endsWith('ed') && KIDS_DICT[lower.slice(0, -2)]) return KIDS_DICT[lower.slice(0, -2)];
   if (lower.endsWith('ing') && KIDS_DICT[lower.slice(0, -3)]) return KIDS_DICT[lower.slice(0, -3)];
+  if (lower.endsWith('ies') && KIDS_DICT[lower.slice(0, -3) + 'y']) return KIDS_DICT[lower.slice(0, -3) + 'y'];
   return null;
 }
 
-// Build a quiz from a subtitle cue (already-watched). Returns null if cue too short
+// Common simple words → Hebrew (for sentence translation)
+const SIMPLE_WORDS_HE = {
+  i:'אני', you:'אתה', he:'הוא', she:'היא', we:'אנחנו', they:'הם', it:'זה',
+  me:'אותי', him:'אותו', her:'אותה', us:'אותנו', them:'אותם',
+  my:'שלי', your:'שלך', his:'שלו', our:'שלנו', their:'שלהם',
+  am:'', is:'', are:'', was:'היה', were:'היו', be:'להיות', been:'היה',
+  do:'', does:'', did:'עשה', done:'נעשה',
+  have:'יש', has:'יש', had:'היה',
+  will:'', would:'יעשה', can:'יכול', could:'יכל', must:'חייב', should:'צריך',
+  the:'', a:'', an:'',
+  and:'ו', or:'או', but:'אבל', so:'אז', because:'כי',
+  if:'אם', when:'כש', where:'איפה', what:'מה', who:'מי', why:'למה', how:'איך',
+  yes:'כן', no:'לא', not:'לא', dont:'לא',
+  in:'ב', on:'על', at:'ב', to:'ל', from:'מ', with:'עם', for:'בשביל', of:'של',
+  this:'זה', that:'זה', these:'אלה', those:'אלה',
+  here:'כאן', there:'שם', now:'עכשיו', then:'אז',
+  very:'מאוד', too:'גם', also:'גם', just:'רק', only:'רק', all:'כל',
+  one:'אחד', some:'כמה', many:'הרבה', more:'יותר', less:'פחות',
+  good:'טוב', bad:'רע', big:'גדול', small:'קטן',
+  go:'ללכת', going:'הולך', goes:'הולך', went:'הלך', come:'לבוא', came:'בא',
+  see:'לראות', saw:'ראה', look:'תסתכל', looking:'מסתכל',
+  know:'לדעת', think:'לחשוב', want:'רוצה', need:'צריך'
+};
+
+// Common kids' phrases - hand-translated
+const COMMON_PHRASES_HE = {
+  "i love you": "אני אוהב אותך",
+  "i love you too": "גם אני אוהב אותך",
+  "thank you": "תודה",
+  "thank you very much": "תודה רבה",
+  "you're welcome": "בבקשה",
+  "good morning": "בוקר טוב",
+  "good night": "לילה טוב",
+  "good afternoon": "אחר צהריים טובים",
+  "good evening": "ערב טוב",
+  "how are you": "מה שלומך",
+  "i'm fine": "אני בסדר",
+  "im fine": "אני בסדר",
+  "what's your name": "מה השם שלך",
+  "whats your name": "מה השם שלך",
+  "my name is": "השם שלי",
+  "nice to meet you": "נעים להכיר",
+  "see you later": "להתראות",
+  "see you tomorrow": "נתראה מחר",
+  "i don't know": "אני לא יודע",
+  "i dont know": "אני לא יודע",
+  "i don't understand": "אני לא מבין",
+  "let's go": "בוא נלך",
+  "lets go": "בוא נלך",
+  "come on": "בוא",
+  "come here": "בוא הנה",
+  "what is it": "מה זה",
+  "what are you doing": "מה אתה עושה",
+  "where are you": "איפה אתה",
+  "i'm sorry": "אני מצטער",
+  "im sorry": "אני מצטער",
+  "i'm here": "אני כאן",
+  "im here": "אני כאן",
+  "be careful": "תיזהר",
+  "look at me": "תסתכל עליי",
+  "look at this": "תראה את זה",
+  "happy birthday": "יום הולדת שמח",
+  "what happened": "מה קרה",
+  "are you okay": "אתה בסדר",
+  "are you ok": "אתה בסדר",
+  "i'm here for you": "אני כאן בשבילך",
+  "trust me": "תסמוך עליי",
+  "don't worry": "אל תדאג",
+  "dont worry": "אל תדאג",
+  "i'm scared": "אני מפחד",
+  "im scared": "אני מפחד",
+  "i'm hungry": "אני רעב",
+  "im hungry": "אני רעב",
+  "i'm tired": "אני עייף",
+  "im tired": "אני עייף",
+  "i don't want to": "אני לא רוצה",
+  "i want to go home": "אני רוצה ללכת הביתה",
+  "let me go": "תן לי ללכת",
+  "stop it": "תפסיק",
+  "wait a minute": "חכה רגע",
+  "one moment": "רגע אחד",
+  "i can do it": "אני יכול",
+  "you can do it": "אתה יכול",
+  "stay here": "תישאר כאן",
+  "go home": "לך הביתה"
+};
+
+// Try to translate a full sentence to Hebrew. Returns null if translation is too poor.
+function translateSentence(text) {
+  if (!text) return null;
+  const cleaned = text.toLowerCase().replace(/[.,!?;:"'\u201c\u201d]/g, '').trim();
+
+  // 1. Exact phrase match
+  if (COMMON_PHRASES_HE[cleaned]) return COMMON_PHRASES_HE[cleaned];
+
+  // 2. Phrase contained in sentence?
+  for (const phrase in COMMON_PHRASES_HE) {
+    if (cleaned.includes(phrase)) {
+      return COMMON_PHRASES_HE[phrase];
+    }
+  }
+
+  // 3. Word-by-word translation - only if we know most of the words
+  const words = cleaned.split(/\s+/).filter(Boolean);
+  if (words.length === 0 || words.length > 12) return null;
+  const translated = [];
+  let knownCount = 0;
+  for (const w of words) {
+    let t = SIMPLE_WORDS_HE[w];
+    if (t === undefined) t = dictLookup(w);
+    if (t === undefined || t === null) {
+      translated.push('?');
+    } else {
+      knownCount++;
+      if (t) translated.push(t); // skip empty translations (filler words)
+    }
+  }
+  // Need to know at least 70% of the words
+  if (knownCount / words.length < 0.7) return null;
+  return translated.join(' ');
+}
+
+// Get the word's exposure level for the current child profile (0=new, 1=familiar, 2=learning, 3=known)
+function getWordLevel(word) {
+  const p = getProfile();
+  if (!p) return 0;
+  p.wordLog = p.wordLog || {};
+  const lower = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (!lower) return 0;
+  return p.wordLog[lower]?.level || 0;
+}
+
+// Increment exposure for a word - bumps level after enough exposures
+function bumpWordExposure(word, correct) {
+  const p = getProfile();
+  if (!p) return;
+  p.wordLog = p.wordLog || {};
+  const lower = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (!lower) return;
+  const entry = p.wordLog[lower] || { level: 0, exposures: 0, correctAnswers: 0, lastSeen: null };
+  entry.exposures = (entry.exposures || 0) + 1;
+  if (correct) entry.correctAnswers = (entry.correctAnswers || 0) + 1;
+  entry.lastSeen = Date.now();
+  // Level-up rules:
+  // 0→1: first exposure or "I understood" click
+  // 1→2: 2 correct answers as level 1
+  // 2→3: 2 correct answers as level 2
+  if (correct) {
+    if (entry.level === 0) entry.level = 1;
+    else if (entry.level === 1 && (entry.correctAnswers || 0) >= 2) entry.level = 2;
+    else if (entry.level === 2 && (entry.correctAnswers || 0) >= 4) entry.level = 3;
+  }
+  p.wordLog[lower] = entry;
+  save();
+}
+
+// Build a quiz from a subtitle cue. Returns one of: 'learn', 'reverse', 'cloze', 'translation'
+// Type chosen based on the child's exposure level to the target word.
 function buildQuizFromCue(cue, allCues) {
   const text = cue.text;
-  if (!text || text.length < 8) return null;
-  // Decide: 50% sentence comprehension, 50% cloze
-  const wantCloze = Math.random() < 0.5;
-  const word = pickChallengeWord(text);
-  if (!word) return null;
-  const heTrans = dictLookup(word);
+  if (!text || text.length < 6) return null;
 
-  if (wantCloze) {
-    // Cloze: show sentence with blank, ask for the missing word (multiple choice from other words)
-    const blanked = text.replace(new RegExp('\\b' + word + '\\b'), '____');
-    // distractors = challenge words from other cues
-    const others = [];
-    for (const c of allCues) {
-      if (c === cue) continue;
-      const w = pickChallengeWord(c.text);
-      if (w && w.toLowerCase() !== word.toLowerCase()) others.push(w);
-      if (others.length > 30) break;
+  // Pick target word - challenge word OR if all are common, the most "interesting" one
+  let word = pickChallengeWord(text);
+  if (!word) {
+    // Fall back to ANY content word (skip super-common pronouns/articles)
+    const words = (text.match(/\b[a-zA-Z]+\b/g) || []).filter(w => w.length >= 3);
+    if (words.length === 0) return null;
+    word = words[Math.floor(words.length / 2)];
+  }
+  const heWord = dictLookup(word);
+  const heSentence = translateSentence(text);
+  const wordLevel = getWordLevel(word);
+
+  // Build distractors: words from OTHER cues, prefer dictionary words
+  const distractorWords = [];
+  for (const c of allCues) {
+    if (c === cue) continue;
+    const cw = (c.text.match(/\b[a-zA-Z]+\b/g) || []);
+    for (const w of cw) {
+      if (w.length < 3) continue;
+      if (w.toLowerCase() === word.toLowerCase()) continue;
+      if (dictLookup(w)) distractorWords.push(w);
+      if (distractorWords.length > 60) break;
     }
-    const distractors = shuffle(others).slice(0, 3);
+    if (distractorWords.length > 60) break;
+  }
+
+  // ============================
+  // LEVEL 0 — LEARN (no quiz, just expose)
+  // Show sentence + Hebrew translation. Child clicks "I understood" → +1 pt.
+  // ============================
+  if (wordLevel === 0) {
+    return {
+      type: 'learn',
+      sentence: text,
+      word,
+      heWord,
+      heSentence,
+      // Highlight the target word for visibility
+      highlightedWord: word
+    };
+  }
+
+  // ============================
+  // LEVEL 1 — REVERSE (Hebrew → English, multiple choice)
+  // "Which word means 'אוהב'?" — child picks English from 4 options
+  // ============================
+  if (wordLevel === 1 && heWord) {
+    const distractors = shuffle(distractorWords).slice(0, 3);
+    while (distractors.length < 3) distractors.push(['happy', 'house', 'water', 'good'][distractors.length]);
+    return {
+      type: 'reverse',
+      sentence: text,
+      word,
+      heWord,
+      heSentence,
+      answer: word,
+      options: shuffle([word, ...distractors])
+    };
+  }
+
+  // ============================
+  // LEVEL 2 — CLOZE (fill in the missing word)
+  // ============================
+  if (wordLevel === 2) {
+    const blanked = text.replace(new RegExp('\\b' + word + '\\b'), '____');
+    const distractors = shuffle(distractorWords).slice(0, 3);
     while (distractors.length < 3) distractors.push(['quickly', 'always', 'never', 'maybe', 'really'][distractors.length]);
     return {
       type: 'cloze',
       sentence: text,
       blanked,
       answer: word,
-      options: shuffle([word, ...distractors]),
-      he: heTrans
+      word,
+      heWord,
+      heSentence,
+      options: shuffle([word, ...distractors])
     };
-  } else {
-    // Translation: ask "what does X mean?" with 3 distractor translations
-    if (!heTrans) {
-      // fallback to cloze if no translation available
-      return buildQuizFromCue({ ...cue, _retryAsCloze: true }, allCues);
-    }
-    // distractors from our dictionary
+  }
+
+  // ============================
+  // LEVEL 3+ — TRANSLATION (English → Hebrew, hardest)
+  // ============================
+  if (wordLevel >= 3 && heWord) {
     const allTrans = Object.values(KIDS_DICT);
-    const distractors = shuffle(allTrans.filter(t => t !== heTrans)).slice(0, 3);
+    const distractors = shuffle(allTrans.filter(t => t !== heWord)).slice(0, 3);
     return {
       type: 'translation',
       sentence: text,
       word,
-      answer: heTrans,
-      options: shuffle([heTrans, ...distractors])
+      answer: heWord,
+      options: shuffle([heWord, ...distractors])
     };
   }
+
+  // Fallback if level 1/3 reached without translation - downgrade to cloze
+  const blanked = text.replace(new RegExp('\\b' + word + '\\b'), '____');
+  const distractors = shuffle(distractorWords).slice(0, 3);
+  while (distractors.length < 3) distractors.push(['quickly', 'always', 'never', 'maybe'][distractors.length]);
+  return {
+    type: 'cloze',
+    sentence: text,
+    blanked,
+    answer: word,
+    word,
+    heWord,
+    heSentence,
+    options: shuffle([word, ...distractors])
+  };
 }
 
 /* =========================================================================
@@ -2834,45 +3161,73 @@ function showSubtitleQuiz(quiz, onClose) {
   const overlay = el('div', { class: 'overlay' });
   const box = el('div', { class: 'quiz-box' });
 
-  // Header label
-  const labelText = quiz.type === 'cloze' ? '📝 השלם את המשפט' : '🎬 שמעת את זה בסרט';
-  box.appendChild(el('div', { class: 'q-label' }, labelText));
-
-  // Frame image from the movie at that moment
-  if (quiz.frameImage) {
-    const imgWrap = el('div', { class: 'quiz-frame-wrap' },
-      el('img', { class: 'quiz-frame', src: quiz.frameImage })
-    );
-    box.appendChild(imgWrap);
+  // ============== LEARN MODE - just expose, no quiz ==============
+  if (quiz.type === 'learn') {
+    return showLearnCard(quiz, onClose);
   }
 
-  // The sentence (with blank if cloze)
-  const displayText = quiz.type === 'cloze' ? quiz.blanked : quiz.sentence;
-  box.appendChild(el('div', { class: 'q-sentence', style: { direction: 'ltr', textAlign: 'center' } }, displayText));
+  // Header label
+  const labels = {
+    'reverse': '🇮🇱 איך אומרים באנגלית?',
+    'cloze': '📝 השלם את המשפט',
+    'translation': '🇬🇧 מה זה אומר?'
+  };
+  box.appendChild(el('div', { class: 'q-label' }, labels[quiz.type] || '🎬 שמעת בסרט'));
 
-  // TTS - speak the full original sentence
-  const playBtn = el('button', { class: 'btn yellow sm', style: { display: 'block', margin: '0 auto 14px' }, onclick: () => speak(quiz.sentence, 'en-US') }, '🔊 שמע משפט שוב');
+  // Frame image
+  if (quiz.frameImage) {
+    box.appendChild(el('div', { class: 'quiz-frame-wrap' },
+      el('img', { class: 'quiz-frame', src: quiz.frameImage })
+    ));
+  }
+
+  // The sentence display - depends on type
+  if (quiz.type === 'reverse') {
+    // Show Hebrew sentence + emphasize the Hebrew word the child needs to translate
+    if (quiz.heSentence) {
+      box.appendChild(el('div', { class: 'q-he-sentence' }, quiz.heSentence));
+    }
+    box.appendChild(el('div', { class: 'q-he-target' }, '"' + quiz.heWord + '"'));
+  } else if (quiz.type === 'cloze') {
+    box.appendChild(el('div', { class: 'q-sentence', style: { direction: 'ltr' } }, quiz.blanked));
+  } else {
+    // translation - show full English sentence
+    box.appendChild(el('div', { class: 'q-sentence', style: { direction: 'ltr' } }, quiz.sentence));
+    box.appendChild(el('div', { class: 'q-word', style: { fontSize: '32px', marginTop: '6px' } }, quiz.word));
+  }
+
+  // 🔊 Listen button - always shows English audio of the sentence
+  const playBtn = el('button', {
+    class: 'btn yellow sm',
+    style: { display: 'block', margin: '0 auto 12px' },
+    onclick: () => speak(quiz.sentence, 'en-US')
+  }, '🔊 שמע באנגלית');
   box.appendChild(playBtn);
-  setTimeout(() => speak(quiz.sentence, 'en-US'), 350);
+  // Auto-speak when shown (only for non-reverse - reverse asks them to think)
+  if (quiz.type !== 'reverse') {
+    setTimeout(() => speak(quiz.sentence, 'en-US'), 350);
+  }
 
   // Prompt
-  let prompt;
-  if (quiz.type === 'cloze') {
-    prompt = 'איזו מילה חסרה?';
-  } else {
-    prompt = 'מה הפירוש של "' + quiz.word + '"?';
-  }
-  box.appendChild(el('div', { class: 'q-prompt' }, prompt));
+  const prompts = {
+    'reverse': 'איזו מילה זאת באנגלית?',
+    'cloze': 'איזו מילה חסרה?',
+    'translation': 'מה משמעות המילה?'
+  };
+  box.appendChild(el('div', { class: 'q-prompt' }, prompts[quiz.type] || ''));
 
   // Options
   const optsBox = el('div', { class: 'q-options' });
   let answered = false;
 
   const startTime = Date.now();
+  // Direction of options text - English options need ltr, Hebrew need rtl
+  const optsLtr = (quiz.type === 'cloze' || quiz.type === 'reverse');
+
   quiz.options.forEach(opt => {
     const optEl = el('div', {
       class: 'q-opt',
-      style: quiz.type === 'cloze' ? { direction: 'ltr', fontFamily: '"Fredoka", sans-serif' } : {},
+      style: optsLtr ? { direction: 'ltr', fontFamily: '"Fredoka", sans-serif' } : {},
       onclick: () => {
         if (answered) return;
         answered = true;
@@ -2880,15 +3235,19 @@ function showSubtitleQuiz(quiz, onClose) {
         if (correct) {
           optEl.classList.add('correct');
           recordAnswer(true);
+          bumpWordExposure(quiz.word, true);
           const elapsed = (Date.now() - startTime) / 1000;
           const fast = elapsed < 5;
-          const base = difficultyFor(quiz.word || quiz.answer);
+          // Points by type: easier types give more (encourages level-up to harder)
+          const pointsByType = { reverse: 2, cloze: 3, translation: 1 };
+          const base = pointsByType[quiz.type] || 2;
           awardStars(base, { fastAnswer: fast, sourceEl: optEl });
           confetti();
           setTimeout(() => { overlay.remove(); onClose(); }, 1100);
         } else {
           optEl.classList.add('wrong');
           recordAnswer(false);
+          // Don't bump exposure on wrong - they need more practice at this level
           setTimeout(() => {
             optsBox.querySelectorAll('.q-opt').forEach(o => {
               if (o.textContent === quiz.answer) o.classList.add('correct');
@@ -2904,17 +3263,119 @@ function showSubtitleQuiz(quiz, onClose) {
   });
   box.appendChild(optsBox);
 
-  // Hint translation if available (translation type already shows the word)
-  if (quiz.type === 'cloze' && quiz.he) {
-    box.appendChild(el('p', { class: 'muted center', style: { fontSize: '12px', marginTop: '8px' } },
-      'רמז: המילה החסרה משמעותה "' + quiz.he + '"'
+  // Hints based on type
+  if (quiz.type === 'cloze' && quiz.heWord) {
+    box.appendChild(el('p', { class: 'hint' },
+      '💡 רמז: המילה החסרה משמעותה "' + quiz.heWord + '"'
     ));
+  }
+  if (quiz.type === 'translation' && quiz.heSentence) {
+    // Show full sentence translation as a hint reveal
+    const hintBtn = el('button', {
+      class: 'btn ghost sm',
+      style: { display: 'block', margin: '8px auto' },
+      onclick: () => {
+        hintBtn.style.display = 'none';
+        const hint = el('p', { class: 'hint' },
+          '🇮🇱 כל המשפט אומר: "' + quiz.heSentence + '"'
+        );
+        box.insertBefore(hint, optsBox.nextSibling);
+      }
+    }, '💡 רמז');
+    box.appendChild(hintBtn);
   }
 
   const actions = el('div', { class: 'q-actions', style: { marginTop: '14px' } });
   actions.appendChild(el('button', { class: 'btn ghost btn-continue hide', onclick: () => { overlay.remove(); onClose(); } }, 'המשך'));
   actions.appendChild(el('button', { class: 'btn ghost', onclick: () => { overlay.remove(); onClose(); } }, '⏭️ דלג'));
   box.appendChild(actions);
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+// LEARN CARD - for words seen for the very first time
+function showLearnCard(quiz, onClose) {
+  const overlay = el('div', { class: 'overlay' });
+  const box = el('div', { class: 'quiz-box learn-card' });
+
+  // Header
+  box.appendChild(el('div', { class: 'q-label q-label-learn' }, '📚 מילה חדשה!'));
+
+  // Frame image from movie
+  if (quiz.frameImage) {
+    box.appendChild(el('div', { class: 'quiz-frame-wrap' },
+      el('img', { class: 'quiz-frame', src: quiz.frameImage })
+    ));
+  }
+
+  // The English sentence with the target word highlighted
+  const sentenceEl = el('div', { class: 'q-sentence', style: { direction: 'ltr', textAlign: 'center' } });
+  if (quiz.highlightedWord) {
+    const re = new RegExp('(\\b' + quiz.highlightedWord + '\\b)', 'i');
+    const parts = quiz.sentence.split(re);
+    parts.forEach(part => {
+      if (re.test(part)) {
+        sentenceEl.appendChild(el('span', { class: 'highlight-word' }, part));
+      } else {
+        sentenceEl.appendChild(document.createTextNode(part));
+      }
+    });
+  } else {
+    sentenceEl.textContent = quiz.sentence;
+  }
+  box.appendChild(sentenceEl);
+
+  // Hebrew sentence translation (the most important!)
+  if (quiz.heSentence) {
+    box.appendChild(el('div', { class: 'q-he-sentence learn-translation' },
+      '🇮🇱 ' + quiz.heSentence
+    ));
+  }
+
+  // Word focus + translation
+  const focusBox = el('div', { class: 'word-focus' },
+    el('div', { class: 'word-focus-en' }, quiz.word),
+    el('div', { class: 'word-focus-arrow' }, '↔'),
+    el('div', { class: 'word-focus-he' }, quiz.heWord || '?')
+  );
+  box.appendChild(focusBox);
+
+  // Listen buttons
+  const audioRow = el('div', { class: 'audio-row' });
+  audioRow.appendChild(el('button', {
+    class: 'btn yellow sm',
+    onclick: () => speak(quiz.word, 'en-US')
+  }, '🔊 ' + quiz.word));
+  audioRow.appendChild(el('button', {
+    class: 'btn blue sm',
+    onclick: () => speak(quiz.sentence, 'en-US')
+  }, '🎬 כל המשפט'));
+  box.appendChild(audioRow);
+
+  // Auto-speak the sentence on open
+  setTimeout(() => speak(quiz.sentence, 'en-US'), 400);
+  setTimeout(() => speak(quiz.word, 'en-US'), 1800);
+
+  // Got it button
+  const gotItBtn = el('button', {
+    class: 'btn green full',
+    style: { marginTop: '14px', fontSize: '20px' },
+    onclick: () => {
+      bumpWordExposure(quiz.word, true);  // promote 0 → 1
+      awardStars(1, { sourceEl: gotItBtn });
+      confetti();
+      setTimeout(() => { overlay.remove(); onClose(); }, 800);
+    }
+  }, 'הבנתי! 👍');
+  box.appendChild(gotItBtn);
+
+  // Skip option (no points, no exposure bump)
+  box.appendChild(el('button', {
+    class: 'btn ghost full',
+    style: { marginTop: '8px', fontSize: '13px' },
+    onclick: () => { overlay.remove(); onClose(); }
+  }, '⏭️ עוד פעם בפעם הבאה'));
 
   overlay.appendChild(box);
   document.body.appendChild(overlay);
