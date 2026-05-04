@@ -343,16 +343,24 @@ export default {
         // Prepare numbered list for the model
         const numbered = sentences.map((s, i) => `${i + 1}. ${s}`).join('\n');
 
-        const prompt = `You are translating English movie subtitles for a children's English-learning app. Hebrew-speaking kids will use this to learn English.
+        const prompt = `You are translating English movie subtitles for a children's English-learning app. Hebrew-speaking kids ages 6-12 will use this to learn English.
 
 For EACH numbered subtitle below, provide:
-1. A natural, simple Hebrew translation (suitable for ages 6-12)
-2. A word-by-word dictionary: every meaningful English word → Hebrew (skip articles like "the", "a"; include verbs, nouns, adjectives, adverbs)
+1. "he": A natural, simple Hebrew translation. CRITICAL RULES:
+   - Use Hebrew gender that matches the speaker if obvious from context (use the surrounding subtitles as context)
+   - If the speaker's gender is unknown, prefer feminine forms when speaking to/about a female child, masculine otherwise
+   - Avoid overly literal translations - prefer natural spoken Hebrew
+   - Keep it short and clear
+2. "words": A dictionary of meaningful English words → Hebrew. RULES:
+   - Include nouns, verbs, adjectives, adverbs (skip "the", "a", "an", "of")
+   - Translate each word in the CONTEXT of this sentence (e.g., "spoken for" = "מאורסת" not "מדבר")
+   - Use simple Hebrew kids understand
+   - Match gender to the sentence
 
 Return STRICTLY valid JSON in this exact format, no markdown, no extra text:
 {"results":[{"i":1,"he":"...","words":{"english":"עברית", ...}}, {"i":2,"he":"...","words":{...}}, ...]}
 
-Subtitles:
+Subtitles to translate:
 ${numbered}`;
 
         try {
