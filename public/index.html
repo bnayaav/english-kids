@@ -766,6 +766,143 @@ h3 { font-size: clamp(18px, 4.5vw, 22px); }
 .muted { color: var(--ink-soft); }
 .hide { display: none !important; }
 
+/* progression bar (in topbar) */
+.prog-wrap {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 16px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 0 var(--ink);
+}
+.prog-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+  font-family: "Varela Round";
+  font-size: 14px;
+}
+.prog-level-badge {
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-weight: bold;
+  font-size: 13px;
+}
+.prog-track {
+  position: relative;
+  height: 20px;
+  background: #f0e8d0;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6BD96B 0%, #FFD23F 50%, #FF8E3C 100%);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(.16,1,.3,1);
+}
+.prog-fill.pulse {
+  animation: progPulse .5s ease-in-out;
+}
+@keyframes progPulse {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(1.4); filter: brightness(1.2); }
+  100% { transform: scaleY(1); }
+}
+.prog-screentime {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.screentime-bar {
+  flex: 1;
+  height: 8px;
+  background: #f0e8d0;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.screentime-fill {
+  height: 100%;
+  background: var(--blue);
+  transition: width .5s;
+}
+
+/* points popup */
+.points-popup {
+  position: fixed;
+  font-family: "Varela Round";
+  font-size: 26px;
+  font-weight: bold;
+  color: var(--green);
+  -webkit-text-stroke: 2px var(--ink);
+  text-shadow: 0 3px 0 var(--ink);
+  pointer-events: none;
+  z-index: 9999;
+  animation: pointsRise 1.2s ease-out forwards;
+}
+@keyframes pointsRise {
+  0% { transform: translateY(0) scale(0.5); opacity: 0; }
+  20% { transform: translateY(-10px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(-80px) scale(1); opacity: 0; }
+}
+
+/* level-up overlay */
+.level-up-overlay {
+  position: fixed; inset: 0;
+  background: rgba(45,27,78,.92);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn .35s;
+}
+.level-up-box {
+  background: linear-gradient(135deg, #FFF8EC 0%, #FFE4B5 100%);
+  border: 4px solid var(--ink);
+  border-radius: 28px;
+  padding: 28px 24px;
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 12px 0 var(--ink);
+  animation: levelUpPop .55s cubic-bezier(.16,1.4,.3,1);
+}
+@keyframes levelUpPop {
+  0% { transform: scale(.4) rotate(-10deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.level-up-emoji {
+  font-size: 80px;
+  animation: levelUpBounce 1s ease-in-out infinite;
+}
+@keyframes levelUpBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.level-up-title {
+  margin: 8px 0;
+  font-size: 32px;
+  color: var(--pink);
+}
+.level-up-num {
+  font-family: "Fredoka", sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  color: var(--ink);
+  -webkit-text-stroke: 3px var(--yellow);
+  line-height: 1;
+  margin: 8px 0;
+}
+.level-up-mins {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+
 /* avatar palette */
 .av-pick {
   display: grid;
@@ -1224,13 +1361,162 @@ function shuffle(arr) {
 }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function getProfile() { return state.profiles.find(p => p.id === cfg.currentProfileId); }
-function awardStars(n) {
+
+/* =========================================================================
+   PROGRESSION SYSTEM - levels, points, daily screen time rewards
+   ========================================================================= */
+
+// Time per level in minutes (cumulative within day)
+const LEVEL_REWARDS = [0, 5, 12, 20, 30, 35, 40, 45, 50];  // index = level
+function levelRewardMinutes(level) {
+  if (level <= 0) return 0;
+  if (level < LEVEL_REWARDS.length) return LEVEL_REWARDS[level];
+  return 50 + (level - 8) * 5; // continue pattern after level 8
+}
+
+const POINTS_PER_LEVEL = 20;
+const MAX_DAILY_MINUTES = 30;
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+// Returns difficulty score 1-3 for a word (or sentence)
+function difficultyFor(word) {
+  if (!word) return 1;
+  const lower = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (lower.length === 0) return 1;
+  if (COMMON_WORDS.has(lower)) return 1;
+  if (lower.length < 5) return 1;
+  if (lower.length < 8) return 2;
+  return 3;
+}
+
+function ensureProfileProgress(p) {
+  if (!p.progression) {
+    p.progression = {
+      level: 1,
+      pointsInLevel: 0,
+      totalPoints: 0,
+      screenTime: { date: todayKey(), earnedToday: 0 },
+      levelUpHistory: []
+    };
+  }
+  // Reset daily counter if new day
+  const today = todayKey();
+  if (p.progression.screenTime.date !== today) {
+    p.progression.screenTime = { date: today, earnedToday: 0 };
+  }
+}
+
+// Award points - returns { points, leveledUp, newLevel, minutesAdded }
+function awardPoints(opts = {}) {
   const p = getProfile();
-  if (!p) return;
-  p.stars = (p.stars || 0) + n;
+  if (!p) return null;
+  ensureProfileProgress(p);
+
+  let points = opts.basePoints || 1;
+  if (opts.fastAnswer) points += 1;
+  if (opts.voiceAnswer) points += 1;
+
+  const before = p.progression.level;
+  p.progression.totalPoints += points;
+  p.progression.pointsInLevel += points;
+
+  // Legacy stars - keep updated for backward compat (display)
+  p.stars = (p.stars || 0) + points;
+
+  let leveledUp = false;
+  let minutesAdded = 0;
+  while (p.progression.pointsInLevel >= POINTS_PER_LEVEL) {
+    p.progression.pointsInLevel -= POINTS_PER_LEVEL;
+    p.progression.level += 1;
+    leveledUp = true;
+    p.progression.levelUpHistory = p.progression.levelUpHistory || [];
+    p.progression.levelUpHistory.push({ level: p.progression.level, date: new Date().toISOString() });
+
+    // Add minutes for this new level (capped daily at MAX_DAILY_MINUTES)
+    const minsForThisLevel = levelRewardMinutes(p.progression.level);
+    const room = Math.max(0, MAX_DAILY_MINUTES - p.progression.screenTime.earnedToday);
+    const add = Math.min(minsForThisLevel, room);
+    if (add > 0) {
+      p.progression.screenTime.earnedToday += add;
+      minutesAdded += add;
+    }
+  }
+
+  // legacy stats
   p.stats = p.stats || { questionsAnswered: 0, correct: 0 };
   save();
+  return {
+    points,
+    leveledUp,
+    newLevel: p.progression.level,
+    minutesAdded,
+    pointsInLevel: p.progression.pointsInLevel,
+    earnedToday: p.progression.screenTime.earnedToday
+  };
 }
+
+// Compatibility shim - old code can still call awardStars(n)
+// Now also shows points popup and animates progress bar
+function awardStars(n, opts = {}) {
+  const result = awardPoints({ basePoints: n, ...opts });
+  if (!result) return;
+  // Show "+N" popup near the source button if provided
+  showPointsPopup(result.points, opts.sourceEl);
+  // Pulse the progress bar
+  pulseProgressBar();
+  // Level up?
+  if (result.leveledUp) {
+    setTimeout(() => bigCelebration(result.newLevel, result.minutesAdded), 500);
+  }
+  return result;
+}
+
+function showPointsPopup(points, sourceEl) {
+  const popup = el('div', { class: 'points-popup' }, '+' + points + ' ⭐');
+  let x = window.innerWidth / 2;
+  let y = window.innerHeight / 2;
+  if (sourceEl && sourceEl.getBoundingClientRect) {
+    const r = sourceEl.getBoundingClientRect();
+    x = r.left + r.width / 2;
+    y = r.top + r.height / 2;
+  }
+  popup.style.left = (x - 30) + 'px';
+  popup.style.top = y + 'px';
+  document.body.appendChild(popup);
+  setTimeout(() => popup.remove(), 1300);
+}
+
+function pulseProgressBar() {
+  const fill = document.getElementById('progFill');
+  if (!fill) return;
+  const p = getProfile();
+  if (!p) return;
+  const pct = (p.progression.pointsInLevel / POINTS_PER_LEVEL) * 100;
+  fill.style.width = pct + '%';
+  fill.classList.remove('pulse');
+  void fill.offsetWidth;
+  fill.classList.add('pulse');
+  // also update header counts inline
+  const wrap = fill.closest('.prog-wrap');
+  if (wrap) {
+    const badge = wrap.querySelector('.prog-level-badge');
+    if (badge) badge.textContent = '🌟 שלב ' + p.progression.level;
+    const counts = wrap.querySelector('.prog-row span:nth-child(2)');
+    if (counts) counts.textContent = p.progression.pointsInLevel + '/' + POINTS_PER_LEVEL + ' נק׳';
+    const stFill = wrap.querySelector('.screentime-fill');
+    const stLabel = wrap.querySelector('.prog-screentime span:nth-child(2)');
+    if (stFill) stFill.style.width = Math.min(100, (p.progression.screenTime.earnedToday / MAX_DAILY_MINUTES) * 100) + '%';
+    if (stLabel) stLabel.textContent = p.progression.screenTime.earnedToday + ' / ' + MAX_DAILY_MINUTES + ' דק׳ היום';
+  }
+  // also legacy stars badge
+  const starsBadge = document.querySelector('.topbar .stars');
+  if (starsBadge) starsBadge.textContent = '⭐ ' + (p.stars || 0);
+}
+
 function recordAnswer(correct) {
   const p = getProfile();
   if (!p) return;
@@ -1249,6 +1535,24 @@ function confetti() {
   }
   document.body.appendChild(c);
   setTimeout(() => c.remove(), 1800);
+}
+
+// Big celebration for level-up
+function bigCelebration(newLevel, minutesAdded) {
+  const c = el('div', { class: 'level-up-overlay' });
+  const inner = el('div', { class: 'level-up-box' },
+    el('div', { class: 'level-up-emoji' }, '🎉'),
+    el('h1', { class: 'level-up-title' }, 'שלב חדש!'),
+    el('div', { class: 'level-up-num' }, newLevel),
+    minutesAdded > 0
+      ? el('p', { class: 'level-up-mins' }, '+' + minutesAdded + ' דקות מסך! ⏱️')
+      : el('p', { class: 'level-up-mins muted' }, 'הגעת למקסימום היומי 🎯'),
+    el('button', { class: 'btn green full', style: { marginTop: '16px' }, onclick: () => c.remove() }, 'המשך! 🚀')
+  );
+  c.appendChild(inner);
+  document.body.appendChild(c);
+  // Big confetti
+  for (let i = 0; i < 4; i++) setTimeout(confetti, i * 200);
 }
 
 /* speech */
@@ -1482,13 +1786,46 @@ SCREENS['profile-edit'] = ({ id }) => {
 /* ---------- topbar shared ---------- */
 function topBar() {
   const p = getProfile();
-  return el('div', { class: 'topbar' },
+  const bar = el('div', {});
+  bar.appendChild(el('div', { class: 'topbar' },
     el('div', { class: 'who', onclick: () => nav('profile-select') },
       el('div', { class: 'av' }, p?.avatar || '🌟'),
       el('span', { style: { fontFamily: '"Varela Round"' } }, p?.name || 'אורח')
     ),
     el('div', { class: 'stars' }, '⭐ ' + (p?.stars || 0))
+  ));
+  if (p) {
+    ensureProfileProgress(p);
+    bar.appendChild(progressionBar(p));
+  }
+  return bar;
+}
+
+function progressionBar(p) {
+  const prog = p.progression;
+  const pct = (prog.pointsInLevel / POINTS_PER_LEVEL) * 100;
+  const screenPct = Math.min(100, (prog.screenTime.earnedToday / MAX_DAILY_MINUTES) * 100);
+  const wrap = el('div', { class: 'prog-wrap' });
+  wrap.appendChild(el('div', { class: 'prog-row' },
+    el('span', {},
+      el('span', { class: 'prog-level-badge' }, '🌟 שלב ' + prog.level),
+      el('span', { style: { marginRight: '8px', color: 'var(--ink-soft)', fontSize: '12px' } },
+        prog.pointsInLevel + '/' + POINTS_PER_LEVEL + ' נק׳'
+      )
+    ),
+  ));
+  const track = el('div', { class: 'prog-track', id: 'progTrack' },
+    el('div', { class: 'prog-fill', id: 'progFill', style: { width: pct + '%' } })
   );
+  wrap.appendChild(track);
+  wrap.appendChild(el('div', { class: 'prog-screentime' },
+    el('span', {}, '⏱️'),
+    el('span', { style: { whiteSpace: 'nowrap' } }, prog.screenTime.earnedToday + ' / ' + MAX_DAILY_MINUTES + ' דק׳ היום'),
+    el('div', { class: 'screentime-bar' },
+      el('div', { class: 'screentime-fill', style: { width: screenPct + '%' } })
+    )
+  ));
+  return wrap;
 }
 
 function backBtn(onClick) {
@@ -2314,6 +2651,7 @@ function showQuiz(q, onClose) {
   const optsBox = el('div', { class: 'q-options' });
   let answered = false;
 
+  const startTime = Date.now();
   allOptions.forEach(opt => {
     const optEl = el('div', { class: 'q-opt', onclick: () => {
       if (answered) return;
@@ -2322,7 +2660,10 @@ function showQuiz(q, onClose) {
       if (correct) {
         optEl.classList.add('correct');
         recordAnswer(true);
-        awardStars(2);
+        const elapsed = (Date.now() - startTime) / 1000;
+        const fast = elapsed < 5;
+        const base = difficultyFor(en);
+        awardStars(base, { fastAnswer: fast, sourceEl: optEl });
         confetti();
         const p = getProfile();
         if (p && q.vocabId) {
@@ -2371,7 +2712,8 @@ function showQuiz(q, onClose) {
             answered = true;
             optsBox.querySelectorAll('.q-opt').forEach(o => { if (o.textContent === he) o.classList.add('correct'); });
             recordAnswer(true);
-            awardStars(3);
+            const base = difficultyFor(en);
+            awardStars(base, { voiceAnswer: true, sourceEl: micBtn });
             confetti();
             setTimeout(() => { overlay.remove(); onClose(); }, 1200);
           }
@@ -2422,6 +2764,7 @@ function showSubtitleQuiz(quiz, onClose) {
   const optsBox = el('div', { class: 'q-options' });
   let answered = false;
 
+  const startTime = Date.now();
   quiz.options.forEach(opt => {
     const optEl = el('div', {
       class: 'q-opt',
@@ -2433,7 +2776,10 @@ function showSubtitleQuiz(quiz, onClose) {
         if (correct) {
           optEl.classList.add('correct');
           recordAnswer(true);
-          awardStars(2);
+          const elapsed = (Date.now() - startTime) / 1000;
+          const fast = elapsed < 5;
+          const base = difficultyFor(quiz.word || quiz.answer);
+          awardStars(base, { fastAnswer: fast, sourceEl: optEl });
           confetti();
           setTimeout(() => { overlay.remove(); onClose(); }, 1100);
         } else {
@@ -2835,16 +3181,53 @@ SCREENS['progress'] = () => {
   wrap.appendChild(backBtn(() => nav('home')));
   const p = getProfile();
   if (!p) { nav('profile-select'); return wrap; }
+  ensureProfileProgress(p);
 
   wrap.appendChild(el('h2', {}, '🏆 ההתקדמות של ' + p.name));
 
   const stats = p.stats || { questionsAnswered: 0, correct: 0 };
   const acc = stats.questionsAnswered > 0 ? Math.round(100 * stats.correct / stats.questionsAnswered) : 0;
 
+  // Level + screen time hero card
+  const heroCard = el('div', { class: 'card', style: { background: 'linear-gradient(135deg, #FFE9C7 0%, #FFD23F 100%)', textAlign: 'center', padding: '20px' } });
+  heroCard.appendChild(el('div', { style: { fontSize: '48px' } }, '🌟'));
+  heroCard.appendChild(el('h2', { style: { margin: '4px 0 0', fontSize: '36px', color: 'var(--ink)' } }, 'שלב ' + p.progression.level));
+  heroCard.appendChild(el('p', { style: { fontSize: '14px', color: 'var(--ink-soft)' } },
+    p.progression.pointsInLevel + ' / ' + POINTS_PER_LEVEL + ' נקודות לשלב הבא'
+  ));
+  // mini track
+  const miniTrack = el('div', { class: 'prog-track', style: { marginTop: '8px', maxWidth: '200px', margin: '8px auto 0' } },
+    el('div', { class: 'prog-fill', style: { width: ((p.progression.pointsInLevel / POINTS_PER_LEVEL) * 100) + '%' } })
+  );
+  heroCard.appendChild(miniTrack);
+  wrap.appendChild(heroCard);
+
+  // Screen time card
+  const stCard = el('div', { class: 'card', style: { background: '#E8F4FF' } });
+  stCard.appendChild(el('h3', {}, '⏱️ זמן מסך שהרוויח היום'));
+  stCard.appendChild(el('div', { style: { fontSize: '32px', textAlign: 'center', margin: '8px 0', color: 'var(--blue)', fontFamily: '"Varela Round"', fontWeight: 'bold' } },
+    p.progression.screenTime.earnedToday + ' / ' + MAX_DAILY_MINUTES + ' דקות'
+  ));
+  const stBar = el('div', { class: 'prog-track' },
+    el('div', { class: 'prog-fill', style: { width: Math.min(100, (p.progression.screenTime.earnedToday / MAX_DAILY_MINUTES) * 100) + '%' } })
+  );
+  stCard.appendChild(stBar);
+  if (p.progression.screenTime.earnedToday >= MAX_DAILY_MINUTES) {
+    stCard.appendChild(el('p', { class: 'muted center', style: { marginTop: '8px', fontSize: '13px' } }, '🎉 מקסימום יומי הושג!'));
+  } else {
+    const nextLevelMins = levelRewardMinutes(p.progression.level + 1);
+    const room = MAX_DAILY_MINUTES - p.progression.screenTime.earnedToday;
+    const willGet = Math.min(nextLevelMins, room);
+    stCard.appendChild(el('p', { class: 'muted center', style: { marginTop: '8px', fontSize: '13px' } },
+      'שלב הבא יוסיף ' + willGet + ' דקות'
+    ));
+  }
+  wrap.appendChild(stCard);
+
   const grid = el('div', { class: 'stats-grid' });
   grid.appendChild(el('div', { class: 'stat-card' },
-    el('div', { class: 'num' }, p.stars || 0),
-    el('div', { class: 'lbl' }, '⭐ כוכבים')
+    el('div', { class: 'num' }, p.progression.totalPoints || 0),
+    el('div', { class: 'lbl' }, '⭐ סך נקודות')
   ));
   grid.appendChild(el('div', { class: 'stat-card' },
     el('div', { class: 'num' }, stats.questionsAnswered),
