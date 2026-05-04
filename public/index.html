@@ -891,6 +891,28 @@ h3 { font-size: clamp(18px, 4.5vw, 22px); }
   flex-wrap: wrap;
 }
 
+.learn-phase {
+  animation: fadeIn .3s;
+}
+.phase-title {
+  text-align: center;
+  font-family: "Varela Round";
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 8px 0 12px;
+  font-weight: bold;
+}
+.q-sentence-small {
+  font-family: "Fredoka", sans-serif;
+  font-size: 18px;
+  text-align: center;
+  color: var(--ink-soft);
+  margin: 6px 0;
+  padding: 6px 8px;
+  background: #f5f0e0;
+  border-radius: 8px;
+}
+
 /* progression bar (in topbar) */
 .prog-wrap {
   background: #fff;
@@ -3445,85 +3467,224 @@ function showLearnCard(quiz, onClose) {
   const box = el('div', { class: 'quiz-box learn-card' });
 
   // Header
-  box.appendChild(el('div', { class: 'q-label q-label-learn' }, '📚 מילה חדשה!'));
+  box.appendChild(el('div', { class: 'q-label q-label-learn' }, '📚 בואו נלמד!'));
 
-  // Frame image from movie
+  // Frame image from movie (always shown)
   if (quiz.frameImage) {
     box.appendChild(el('div', { class: 'quiz-frame-wrap' },
       el('img', { class: 'quiz-frame', src: quiz.frameImage })
     ));
   }
 
-  // The English sentence with the target word highlighted
-  const sentenceEl = el('div', { class: 'q-sentence', style: { direction: 'ltr', textAlign: 'center' } });
-  if (quiz.highlightedWord) {
-    const re = new RegExp('(\\b' + quiz.highlightedWord + '\\b)', 'i');
-    const parts = quiz.sentence.split(re);
-    parts.forEach(part => {
-      if (re.test(part)) {
-        sentenceEl.appendChild(el('span', { class: 'highlight-word' }, part));
-      } else {
-        sentenceEl.appendChild(document.createTextNode(part));
-      }
-    });
-  } else {
-    sentenceEl.textContent = quiz.sentence;
-  }
-  box.appendChild(sentenceEl);
+  // Phase container - we swap content between phases
+  const phaseBox = el('div', { class: 'learn-phase' });
+  box.appendChild(phaseBox);
 
-  // Hebrew sentence translation (the most important!)
-  if (quiz.heSentence) {
-    box.appendChild(el('div', { class: 'q-he-sentence learn-translation' },
-      '🇮🇱 ' + quiz.heSentence
-    ));
-  }
+  let phase = 1;
 
-  // Word focus + translation
-  const focusBox = el('div', { class: 'word-focus' },
-    el('div', { class: 'word-focus-en' }, quiz.word),
-    el('div', { class: 'word-focus-arrow' }, '↔'),
-    el('div', { class: 'word-focus-he' }, quiz.heWord || '?')
-  );
-  box.appendChild(focusBox);
+  // ============ PHASE 1: HEAR ENGLISH ============
+  function renderPhase1() {
+    phaseBox.innerHTML = '';
+    phaseBox.appendChild(el('p', { class: 'phase-title' }, '🇬🇧 שמעו את המשפט באנגלית'));
 
-  // Listen buttons
-  const audioRow = el('div', { class: 'audio-row' });
-  audioRow.appendChild(el('button', {
-    class: 'btn yellow sm',
-    onclick: () => speak(quiz.word, 'en-US')
-  }, '🔊 ' + quiz.word));
-  audioRow.appendChild(el('button', {
-    class: 'btn blue sm',
-    onclick: () => speak(quiz.sentence, 'en-US')
-  }, '🎬 כל המשפט'));
-  box.appendChild(audioRow);
-
-  // Auto-speak the sentence on open
-  setTimeout(() => speak(quiz.sentence, 'en-US'), 400);
-  setTimeout(() => speak(quiz.word, 'en-US'), 1800);
-
-  // Got it button
-  const gotItBtn = el('button', {
-    class: 'btn green full',
-    style: { marginTop: '14px', fontSize: '20px' },
-    onclick: () => {
-      bumpWordExposure(quiz.word, true);  // promote 0 → 1
-      awardStars(1, { sourceEl: gotItBtn });
-      confetti();
-      setTimeout(() => { overlay.remove(); onClose(); }, 800);
+    // English sentence with highlighted word
+    const sentenceEl = el('div', { class: 'q-sentence', style: { direction: 'ltr', textAlign: 'center' } });
+    if (quiz.highlightedWord) {
+      const re = new RegExp('(\\b' + quiz.highlightedWord + '\\b)', 'i');
+      const parts = quiz.sentence.split(re);
+      parts.forEach(part => {
+        if (re.test(part)) sentenceEl.appendChild(el('span', { class: 'highlight-word' }, part));
+        else sentenceEl.appendChild(document.createTextNode(part));
+      });
+    } else {
+      sentenceEl.textContent = quiz.sentence;
     }
-  }, 'הבנתי! 👍');
-  box.appendChild(gotItBtn);
+    phaseBox.appendChild(sentenceEl);
 
-  // Skip option (no points, no exposure bump)
-  box.appendChild(el('button', {
-    class: 'btn ghost full',
-    style: { marginTop: '8px', fontSize: '13px' },
-    onclick: () => { overlay.remove(); onClose(); }
-  }, '⏭️ עוד פעם בפעם הבאה'));
+    const playBtn = el('button', {
+      class: 'btn yellow full', style: { marginTop: '12px', fontSize: '18px' },
+      onclick: () => speak(quiz.sentence, 'en-US')
+    }, '🔊 השמע שוב');
+    phaseBox.appendChild(playBtn);
+
+    phaseBox.appendChild(el('button', {
+      class: 'btn green full', style: { marginTop: '10px', fontSize: '20px' },
+      onclick: () => { phase = 2; renderPhase2(); }
+    }, 'מה זה אומר? ↓'));
+
+    // Auto-play English audio
+    setTimeout(() => speak(quiz.sentence, 'en-US'), 350);
+  }
+
+  // ============ PHASE 2: HEAR HEBREW EXPLANATION ============
+  function renderPhase2() {
+    phaseBox.innerHTML = '';
+    phaseBox.appendChild(el('p', { class: 'phase-title' }, '🇮🇱 הנה התרגום'));
+
+    // English sentence (smaller now)
+    phaseBox.appendChild(el('div', { class: 'q-sentence-small', style: { direction: 'ltr' } }, quiz.sentence));
+
+    // Hebrew translation (BIG)
+    if (quiz.heSentence) {
+      phaseBox.appendChild(el('div', { class: 'q-he-sentence learn-translation' },
+        quiz.heSentence
+      ));
+    }
+
+    // Word focus
+    const focusBox = el('div', { class: 'word-focus' },
+      el('div', { class: 'word-focus-en' }, quiz.word),
+      el('div', { class: 'word-focus-arrow' }, '↔'),
+      el('div', { class: 'word-focus-he' }, quiz.heWord || '?')
+    );
+    phaseBox.appendChild(focusBox);
+
+    // Replay buttons
+    const replayRow = el('div', { class: 'audio-row' });
+    replayRow.appendChild(el('button', {
+      class: 'btn yellow sm',
+      onclick: () => speak(quiz.sentence, 'en-US')
+    }, '🇬🇧 משפט באנגלית'));
+    replayRow.appendChild(el('button', {
+      class: 'btn pink sm',
+      onclick: () => speakHebrew(quiz.heSentence || '')
+    }, '🇮🇱 בעברית'));
+    phaseBox.appendChild(replayRow);
+
+    phaseBox.appendChild(el('button', {
+      class: 'btn green full', style: { marginTop: '14px', fontSize: '20px' },
+      onclick: () => { phase = 3; renderPhase3(); }
+    }, 'מוכן/ה לשאלה! ↓'));
+
+    // Auto-play sequence: explain in Hebrew, then say the sentence in English, then translation
+    setTimeout(() => {
+      speakHebrew('המשפט הזה אומר: ' + (quiz.heSentence || ''));
+    }, 300);
+  }
+
+  // ============ PHASE 3: QUIZ - what does the word mean? ============
+  function renderPhase3() {
+    phaseBox.innerHTML = '';
+    phaseBox.appendChild(el('p', { class: 'phase-title' }, '🎯 השאלה'));
+
+    // The word in big - "what does X mean?"
+    phaseBox.appendChild(el('div', { class: 'q-word', style: { fontSize: '46px', margin: '12px 0' } }, quiz.word));
+
+    // Hint button - replay the sentence
+    phaseBox.appendChild(el('button', {
+      class: 'btn ghost sm',
+      style: { display: 'block', margin: '0 auto 8px' },
+      onclick: () => speak(quiz.sentence, 'en-US')
+    }, '🔊 שמע שוב את המשפט'));
+
+    phaseBox.appendChild(el('div', { class: 'q-prompt' }, 'מה הפירוש בעברית?'));
+
+    // Build options (Hebrew translations - target + 3 distractors)
+    const heAnswer = quiz.heWord || '?';
+    const allTrans = Object.values(KIDS_DICT);
+    const distractors = shuffle(allTrans.filter(t => t !== heAnswer && t.length > 0)).slice(0, 3);
+    while (distractors.length < 3) distractors.push(['טוב', 'בית', 'מים', 'יפה'][distractors.length]);
+    const options = shuffle([heAnswer, ...distractors]);
+
+    const optsBox = el('div', { class: 'q-options' });
+    let answered = false;
+    const startTime = Date.now();
+    options.forEach(opt => {
+      const optEl = el('div', { class: 'q-opt', onclick: () => {
+        if (answered) return;
+        answered = true;
+        const correct = opt === heAnswer;
+        if (correct) {
+          optEl.classList.add('correct');
+          recordAnswer(true);
+          bumpWordExposure(quiz.word, true);
+          const elapsed = (Date.now() - startTime) / 1000;
+          awardStars(2, { fastAnswer: elapsed < 5, sourceEl: optEl });
+          confetti();
+          speakHebrew('כל הכבוד! ' + heAnswer);
+          setTimeout(() => { overlay.remove(); onClose(); }, 1400);
+        } else {
+          optEl.classList.add('wrong');
+          recordAnswer(false);
+          setTimeout(() => {
+            optsBox.querySelectorAll('.q-opt').forEach(o => {
+              if (o.textContent === heAnswer) o.classList.add('correct');
+            });
+            speakHebrew('הפירוש הנכון: ' + heAnswer);
+          }, 300);
+          setTimeout(() => {
+            continueBtn.classList.remove('hide');
+          }, 800);
+        }
+      } }, opt);
+      optsBox.appendChild(optEl);
+    });
+    phaseBox.appendChild(optsBox);
+
+    // Microphone option - speak the answer in Hebrew
+    const micBtn = el('button', { class: 'mic-btn' }, '🎤 או דברו: אמרו את הפירוש בעברית');
+    const micResult = el('div', { class: 'mic-result' });
+    let micRec = null;
+    micBtn.addEventListener('click', () => {
+      if (micRec) { try { micRec.stop(); } catch(e){} micRec = null; micBtn.classList.remove('recording'); return; }
+      micBtn.classList.add('recording');
+      micResult.textContent = 'מקשיב...';
+      micRec = listen((text, final) => {
+        micResult.textContent = text;
+        if (final) {
+          const said = (text || '').replace(/[^\u0590-\u05FF\s]/g, '').trim();
+          const want = (heAnswer || '').replace(/[^\u0590-\u05FF\s]/g, '').trim();
+          if (said && want && (said.includes(want) || want.includes(said))) {
+            if (!answered) {
+              answered = true;
+              optsBox.querySelectorAll('.q-opt').forEach(o => { if (o.textContent === heAnswer) o.classList.add('correct'); });
+              recordAnswer(true);
+              bumpWordExposure(quiz.word, true);
+              awardStars(3, { voiceAnswer: true, sourceEl: micBtn });
+              confetti();
+              speakHebrew('מעולה!');
+              setTimeout(() => { overlay.remove(); onClose(); }, 1500);
+            }
+          }
+        }
+      }, () => { micBtn.classList.remove('recording'); micRec = null; }, 'he-IL');
+    });
+    phaseBox.appendChild(micBtn);
+    phaseBox.appendChild(micResult);
+
+    const continueBtn = el('button', {
+      class: 'btn ghost full hide', style: { marginTop: '10px' },
+      onclick: () => { overlay.remove(); onClose(); }
+    }, 'המשך');
+    phaseBox.appendChild(continueBtn);
+
+    // Skip
+    phaseBox.appendChild(el('button', {
+      class: 'btn ghost full', style: { marginTop: '6px', fontSize: '13px' },
+      onclick: () => { overlay.remove(); onClose(); }
+    }, '⏭️ דלג'));
+
+    // Speak the question aloud
+    setTimeout(() => speakHebrew('מה זה ' + quiz.word + '?'), 200);
+  }
+
+  renderPhase1();
 
   overlay.appendChild(box);
   document.body.appendChild(overlay);
+}
+
+// Speak Hebrew text using TTS
+function speakHebrew(text) {
+  if (!text) return;
+  if (!('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'he-IL';
+    u.rate = 0.95;
+    speechSynthesis.speak(u);
+  } catch (e) {}
 }
 
 /* =========================================================================
