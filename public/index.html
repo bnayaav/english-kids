@@ -766,6 +766,28 @@ h3 { font-size: clamp(18px, 4.5vw, 22px); }
 .muted { color: var(--ink-soft); }
 .hide { display: none !important; }
 
+.quiz-frame-wrap {
+  margin: -8px -8px 14px -8px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid var(--ink);
+  box-shadow: 0 4px 0 var(--ink);
+  position: relative;
+  background: #000;
+  animation: framePop .35s cubic-bezier(.16,1.4,.3,1);
+}
+.quiz-frame {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: cover;
+}
+@keyframes framePop {
+  0% { transform: scale(.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* progression bar (in topbar) */
 .prog-wrap {
   background: #fff;
@@ -2520,6 +2542,7 @@ SCREENS['player'] = ({ movieId }) => {
   if (!movie.uploaded) {
     videoWrap.innerHTML = '<div style="padding:30px;color:#fff;text-align:center">⏳ הסרט עדיין מועלה...</div>';
   } else {
+    video.crossOrigin = 'anonymous';
     video.src = apiUrl('/api/video/' + movie.id);
     setupPlayerCtx(video, movie);
   }
@@ -2583,6 +2606,7 @@ function setupPlayerCtx(video, movie) {
             const quiz = buildQuizFromCue(pick.cue, subtitles);
             if (quiz) {
               firedSubtitles.add(pick.idx);
+              quiz.cue = pick.cue; // pass cue for frame capture
               triggerQuiz({ subtitleQuiz: quiz, time: t });
               return;
             }
@@ -2597,13 +2621,77 @@ function setupPlayerCtx(video, movie) {
     }
   });
 
-  function triggerQuiz(q) {
+  async function triggerQuiz(q) {
     video.pause();
+    let frameDataUrl = null;
+    // If we have a cue with timestamp, capture that exact frame
+    if (q.subtitleQuiz && q.subtitleQuiz.cue) {
+      try {
+        frameDataUrl = await captureFrameAt(video, q.subtitleQuiz.cue);
+      } catch (e) {
+        console.warn('frame capture failed', e);
+      }
+    } else {
+      // Fallback: capture current frame
+      try { frameDataUrl = captureCurrentFrame(video); } catch (e) {}
+    }
+    if (q.subtitleQuiz) q.subtitleQuiz.frameImage = frameDataUrl;
+    else q.frameImage = frameDataUrl;
     showQuiz(q, () => {
-      // after quiz: resume
       try { video.play(); } catch (e) {}
     });
   }
+}
+
+// Captures the current video frame to a data URL
+function captureCurrentFrame(video) {
+  if (!video || video.readyState < 2) return null;
+  const w = Math.min(640, video.videoWidth || 640);
+  const h = video.videoHeight ? Math.round(video.videoHeight * (w / video.videoWidth)) : 360;
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  try {
+    ctx.drawImage(video, 0, 0, w, h);
+    return canvas.toDataURL('image/jpeg', 0.7);
+  } catch (e) {
+    // CORS / tainted - can't capture
+    return null;
+  }
+}
+
+// Seek to cue mid-time, capture frame, then return to original time
+function captureFrameAt(video, cue) {
+  return new Promise((resolve) => {
+    const originalTime = video.currentTime;
+    const targetTime = (cue.start + cue.end) / 2; // middle of the cue
+    let timeout = null;
+    const onSeeked = () => {
+      video.removeEventListener('seeked', onSeeked);
+      if (timeout) clearTimeout(timeout);
+      // wait one frame for the image to render
+      requestAnimationFrame(() => {
+        const img = captureCurrentFrame(video);
+        // restore original time silently
+        try { video.currentTime = originalTime; } catch (e) {}
+        resolve(img);
+      });
+    };
+    video.addEventListener('seeked', onSeeked);
+    // safety timeout - if seeking takes too long, give up gracefully
+    timeout = setTimeout(() => {
+      video.removeEventListener('seeked', onSeeked);
+      // capture whatever we have and restore
+      const img = captureCurrentFrame(video);
+      try { video.currentTime = originalTime; } catch (e) {}
+      resolve(img);
+    }, 1500);
+    try { video.currentTime = targetTime; } catch (e) {
+      video.removeEventListener('seeked', onSeeked);
+      if (timeout) clearTimeout(timeout);
+      resolve(null);
+    }
+  });
 }
 
 /* =========================================================================
@@ -2631,6 +2719,14 @@ function showQuiz(q, onClose) {
   const box = el('div', { class: 'quiz-box' });
 
   box.appendChild(el('div', { class: 'q-label' }, isPhrase ? '🎯 משפט' : '✨ מילה'));
+
+  // Frame image from the current moment in the movie
+  if (q.frameImage) {
+    const imgWrap = el('div', { class: 'quiz-frame-wrap' },
+      el('img', { class: 'quiz-frame', src: q.frameImage })
+    );
+    box.appendChild(imgWrap);
+  }
 
   const target = isPhrase
     ? el('div', { class: 'q-sentence' }, en)
@@ -2741,6 +2837,14 @@ function showSubtitleQuiz(quiz, onClose) {
   // Header label
   const labelText = quiz.type === 'cloze' ? '📝 השלם את המשפט' : '🎬 שמעת את זה בסרט';
   box.appendChild(el('div', { class: 'q-label' }, labelText));
+
+  // Frame image from the movie at that moment
+  if (quiz.frameImage) {
+    const imgWrap = el('div', { class: 'quiz-frame-wrap' },
+      el('img', { class: 'quiz-frame', src: quiz.frameImage })
+    );
+    box.appendChild(imgWrap);
+  }
 
   // The sentence (with blank if cloze)
   const displayText = quiz.type === 'cloze' ? quiz.blanked : quiz.sentence;
