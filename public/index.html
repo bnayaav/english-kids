@@ -1556,36 +1556,162 @@ function bumpWordExposure(word, correct) {
   save();
 }
 
+// Translate all subtitle cues using Claude API via worker, in batches
+async function translateSubtitles(movie, btn, infoEl) {
+  const cues = movie.subtitles || [];
+  // Filter cues that don't have heText yet
+  const todo = [];
+  for (let i = 0; i < cues.length; i++) {
+    if (!cues[i].heText && cues[i].text && cues[i].text.length >= 2) {
+      todo.push({ idx: i, text: cues[i].text });
+    }
+  }
+  if (todo.length === 0) {
+    if (confirm('כל הכתוביות כבר מתורגמות. לתרגם הכל מחדש?')) {
+      cues.forEach(c => { delete c.heText; delete c.heWords; });
+      save();
+      return translateSubtitles(movie, btn, infoEl);
+    }
+    return;
+  }
+  const BATCH = 25;
+  let done = 0;
+  let failed = 0;
+  const total = todo.length;
+
+  // Build progress modal
+  const modal = el('div', { class: 'overlay' });
+  const modalBox = el('div', { class: 'card', style: { maxWidth: '380px', width: '100%' } });
+  modalBox.appendChild(el('h3', { style: { textAlign: 'center' } }, '🤖 מתרגם כתוביות...'));
+  const progLabel = el('p', { class: 'center', style: { marginBottom: '8px', fontFamily: '"Varela Round"' } }, '0 / ' + total);
+  modalBox.appendChild(progLabel);
+  const progTrack = el('div', { class: 'progress-bar' });
+  const progFill = el('div', { class: 'fill', style: { width: '0%' } });
+  progTrack.appendChild(progFill);
+  modalBox.appendChild(progTrack);
+  const progStatus = el('p', { class: 'muted center', style: { fontSize: '12px', marginTop: '8px' } }, 'מתחיל...');
+  modalBox.appendChild(progStatus);
+  let cancelled = false;
+  const cancelBtn = el('button', { class: 'btn ghost full', style: { marginTop: '12px' }, onclick: () => { cancelled = true; } }, 'בטל');
+  modalBox.appendChild(cancelBtn);
+  modal.appendChild(modalBox);
+  document.body.appendChild(modal);
+
+  btn.setAttribute('disabled', 'disabled');
+  btn.textContent = '⏳ מתרגם...';
+
+  try {
+    for (let start = 0; start < todo.length; start += BATCH) {
+      if (cancelled) break;
+      const batch = todo.slice(start, start + BATCH);
+      progStatus.textContent = `שולח אצווה ${Math.floor(start / BATCH) + 1} מתוך ${Math.ceil(todo.length / BATCH)}...`;
+      try {
+        const resp = await api('/api/translate-batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sentences: batch.map(b => b.text) })
+        });
+        // Apply translations
+        if (resp.translations) {
+          batch.forEach((b, i) => {
+            const tr = resp.translations[i];
+            if (tr && tr.he) {
+              cues[b.idx].heText = tr.he;
+              cues[b.idx].heWords = tr.words || {};
+              done++;
+            } else {
+              failed++;
+            }
+          });
+        }
+        // Save progress incrementally - so a crash doesn't lose work
+        save();
+      } catch (e) {
+        failed += batch.length;
+        progStatus.textContent = '⚠️ שגיאה באצווה: ' + (e.message || e).slice(0, 50);
+        // Continue with next batch
+      }
+      const completed = done + failed;
+      progFill.style.width = ((completed / total) * 100) + '%';
+      progLabel.textContent = `${completed} / ${total}`;
+      // Tiny delay between batches to be nice to the API
+      await new Promise(r => setTimeout(r, 200));
+    }
+  } finally {
+    modal.remove();
+    btn.removeAttribute('disabled');
+    if (cancelled) {
+      showToast('🛑 התרגום בוטל. ' + done + ' שורות תורגמו והושמרו');
+    } else if (failed > 0) {
+      showToast(`✓ ${done} שורות • ⚠️ ${failed} נכשלו`);
+    } else {
+      showToast(`✅ כל ${done} השורות תורגמו!`);
+    }
+    render();
+  }
+}
+
 // Build a quiz from a subtitle cue. Returns one of: 'learn', 'reverse', 'cloze', 'translation'
 // Type chosen based on the child's exposure level to the target word.
 function buildQuizFromCue(cue, allCues) {
   const text = cue.text;
   if (!text || text.length < 6) return null;
 
-  // Pick target word - challenge word OR if all are common, the most "interesting" one
-  let word = pickChallengeWord(text);
+  // PRIORITY 1: Use AI translations if we have them
+  const aiHeSentence = cue.heText;
+  const aiWords = cue.heWords || {};
+
+  // Pick target word - prefer words that we have AI translations for!
+  let word = null;
+  if (Object.keys(aiWords).length > 0) {
+    // Pick from AI-translated words, prefer ones with longer English
+    const candidates = Object.keys(aiWords)
+      .filter(w => w.length >= 3 && /^[a-zA-Z]+$/.test(w));
+    if (candidates.length > 0) {
+      // Prefer challenge words, but any word works
+      const challengers = candidates.filter(w => !COMMON_WORDS.has(w.toLowerCase()));
+      const pool = challengers.length > 0 ? challengers : candidates;
+      word = pool[Math.floor(Math.random() * pool.length)];
+    }
+  }
   if (!word) {
-    // Fall back to ANY content word (skip super-common pronouns/articles)
+    word = pickChallengeWord(text);
+  }
+  if (!word) {
     const words = (text.match(/\b[a-zA-Z]+\b/g) || []).filter(w => w.length >= 3);
     if (words.length === 0) return null;
     word = words[Math.floor(words.length / 2)];
   }
-  const heWord = dictLookup(word);
-  const heSentence = translateSentence(text);
+
+  // Get translation: prefer AI, fallback to dict
+  const heWord = aiWords[word.toLowerCase()] || aiWords[word] || dictLookup(word);
+  const heSentence = aiHeSentence || translateSentence(text);
   const wordLevel = getWordLevel(word);
 
-  // Build distractors: words from OTHER cues, prefer dictionary words
+  // Build distractors: prefer words with translations from AI
   const distractorWords = [];
   for (const c of allCues) {
     if (c === cue) continue;
-    const cw = (c.text.match(/\b[a-zA-Z]+\b/g) || []);
-    for (const w of cw) {
+    const cWords = c.heWords || {};
+    for (const w of Object.keys(cWords)) {
       if (w.length < 3) continue;
       if (w.toLowerCase() === word.toLowerCase()) continue;
-      if (dictLookup(w)) distractorWords.push(w);
+      distractorWords.push(w);
       if (distractorWords.length > 60) break;
     }
     if (distractorWords.length > 60) break;
+  }
+  // Fallback distractors from dict if not enough
+  if (distractorWords.length < 10) {
+    for (const c of allCues) {
+      if (c === cue) continue;
+      const cw = (c.text.match(/\b[a-zA-Z]+\b/g) || []);
+      for (const w of cw) {
+        if (w.length < 3) continue;
+        if (w.toLowerCase() === word.toLowerCase()) continue;
+        if (dictLookup(w)) distractorWords.push(w);
+      }
+    }
   }
 
   // ============================
@@ -2293,8 +2419,13 @@ SCREENS['movie-add'] = ({ id }) => {
 
     // Subtitles status
     const subCount = (editing.subtitles || []).length;
+    const translatedCount = (editing.subtitles || []).filter(c => c.heText || c.he).length;
     const subInfo = el('p', { class: 'muted', style: { fontSize: '13px', marginTop: '6px' } },
-      subCount > 0 ? `📄 כתוביות: ${subCount} שורות (השאלות יילקחו מהסרט)` : '📄 כתוביות: לא הועלו (השאלות יהיו מבנק המילים)'
+      subCount > 0
+        ? (translatedCount > 0
+          ? `📄 ${subCount} שורות • 🤖 ${translatedCount} מתורגמות`
+          : `📄 ${subCount} שורות (מומלץ לתרגם!)`)
+        : '📄 כתוביות: לא הועלו (השאלות יהיו מבנק המילים)'
     );
     card.appendChild(subInfo);
 
@@ -2314,9 +2445,8 @@ SCREENS['movie-add'] = ({ id }) => {
             if (cues.length === 0) { alert('לא נמצאו כתוביות תקינות בקובץ'); return; }
             editing.subtitles = cues;
             save();
-            subInfo.textContent = `✓ נטענו ${cues.length} שורות כתוביות`;
-            subInfo.style.color = '#4DBC4D';
             showToast(`✓ ${cues.length} שורות כתוביות נשמרו`);
+            render();
           } catch (err) {
             alert('שגיאה בקריאת הקובץ: ' + err.message);
           }
@@ -2324,6 +2454,21 @@ SCREENS['movie-add'] = ({ id }) => {
       })
     );
     card.appendChild(srtLabel);
+
+    // AI Translation button
+    if (subCount > 0) {
+      const needTranslate = subCount - translatedCount;
+      const trBtn = el('button', {
+        class: 'btn pink full', style: { marginTop: '10px' },
+        onclick: () => translateSubtitles(editing, trBtn, subInfo)
+      }, needTranslate > 0
+        ? `🤖 תרגם עם AI (${needTranslate} שורות)`
+        : `🤖 תרגם הכל מחדש`);
+      card.appendChild(trBtn);
+      card.appendChild(el('p', { class: 'muted', style: { fontSize: '11px', textAlign: 'center', marginTop: '4px' } },
+        '⚡ תרגום איכותי לעברית עבור כל המשפטים'
+      ));
+    }
 
     if (subCount > 0) {
       card.appendChild(el('button', {
